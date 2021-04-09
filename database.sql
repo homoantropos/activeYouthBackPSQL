@@ -1,0 +1,7 @@
+create TABLE user (
+    _id INT GENERATED ALWAYS AS IDENTITY,
+    email VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(20) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    PRIMARY KEY (_id)
+);
