@@ -1,8 +1,8 @@
 const db = require('../db');
 
-class Country_controller {
+class Address_controller {
 
-    async createCountry(req, res) {
+    async createAddress(req, res) {
         try {
 
         } catch (error) {
@@ -12,7 +12,7 @@ class Country_controller {
         }
     }
 
-    async updateCountry(req, res) {
+    async updateAddress(req, res) {
         try {
 
         } catch (error) {
@@ -22,7 +22,7 @@ class Country_controller {
         }
     }
 
-    async getAllCountries(req, res) {
+    async getAllAddress(req, res) {
         try {
 
         } catch (error) {
@@ -32,7 +32,7 @@ class Country_controller {
         }
     }
 
-    async getOneCountryById(req, res) {
+    async getAddressByCountry(req, res) {
         try {
 
         } catch (error) {
@@ -42,7 +42,37 @@ class Country_controller {
         }
     }
 
-    async deleteCountry(req, res) {
+    async getAddressByRegion(req, res) {
+        try {
+
+        } catch (error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
+
+    async getAddressByTown(req, res) {
+        try {
+
+        } catch (error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
+
+    async getOneAddressById(req, res) {
+        try {
+
+        } catch (error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
+
+    async deleteAddress(req, res) {
         try {
 
         } catch (error) {
@@ -53,4 +83,4 @@ class Country_controller {
     }
 }
 
-module.exports = new Country_controller()
+module.exports = new Address_controller()
