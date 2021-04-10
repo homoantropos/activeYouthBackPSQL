@@ -20,8 +20,11 @@ const sportHallRoutes = require('./routes/sport_hall_routes');
 const townRoutes = require('./routes/town_routes');
 const userRoutes = require('./routes/user_routes');
 
+
+app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(require('cors')());
 
 app.use('/api/activity', activityRoutes);
 app.use('/api/address', addressRoutes);

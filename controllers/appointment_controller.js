@@ -24,7 +24,9 @@ class Appointment_controller {
 
     async getAllAppointments(req, res) {
         try {
-
+            res.json({
+                message: "im working"
+            })
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

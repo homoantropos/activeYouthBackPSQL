@@ -1,7 +1,7 @@
-create TABLE user (
+create TABLE person(
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(100) NOT NULL,
     _id INT GENERATED ALWAYS AS IDENTITY,
-    email VARCHAR(20) NOT NULL UNIQUE,
-    password VARCHAR(20) NOT NULL,
-    role VARCHAR(20) NOT NULL,
     PRIMARY KEY (_id)
 );
