@@ -7,7 +7,7 @@ class User_controller {
         try {
             const salt = await bcrypt.genSalt(10);
             let password = await bcrypt.hash(req.body.password, salt);
-            const person = await db.query(`INSERT INTO person (email, password, role) values ($1, $2, $3) RETURNING *`,
+            const person = await db.query(`INSERT INTO person (email, password, role) values ($1, $2, $3) RETURNING _id, email, role`,
                 [req.body.email, password, req.body.role]);
             res.status(201).json(person.rows[0]);
         } catch (error) {
@@ -33,7 +33,7 @@ class User_controller {
             const salt = await bcrypt.genSalt(10);
             let password = await bcrypt.hash(req.body.password, salt);
             const person = await db.query(
-                `UPDATE person set email = $1, password = $2, role = $3 where _id = $4 RETURNING *`,
+                `UPDATE person set email = $1, password = $2, role = $3 where _id = $4 RETURNING _id, email, role`,
                 [req.body.email, password, req.body.role, _id]
             );
             res.json(person.rows[0]);
@@ -58,7 +58,7 @@ class User_controller {
     async getOneUserById(req, res) {
         try {
             const id = req.params.id;
-            const person = await db.query(`SELECT * FROM person where _id = ($1)`, [id]);
+            const person = await db.query(`SELECT _id, email, role FROM person where _id = ($1)`, [id]);
             res.status(201).json(person.rows[0]);
         } catch (error) {
             res.status(500).json({
