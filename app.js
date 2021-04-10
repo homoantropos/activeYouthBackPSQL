@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const passport = require('passport');
 
 const activityRoutes = require('./routes/activity_routes');
 const addressRoutes = require('./routes/address_routes');
@@ -20,7 +21,8 @@ const sportHallRoutes = require('./routes/sport_hall_routes');
 const townRoutes = require('./routes/town_routes');
 const userRoutes = require('./routes/user_routes');
 
-
+app.use(passport.initialize());
+require('./middleware/passport')(passport);
 app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());

@@ -1,5 +1,7 @@
 const db = require('../db');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const keys = require('../config/keys');
 
 class User_controller {
 
@@ -19,7 +21,30 @@ class User_controller {
 
     async login(req, res) {
         try {
+            const candidate = await db.query(`SELECT * FROM person where email = $1 `, [req.body.email]);
 
+            if(candidate) {
+                const passwordCompare = await bcrypt.compare(req.body.password, candidate.rows[0].password);
+                if(passwordCompare) {
+                    console.log(candidate.rows[0]);
+                    const token = jwt.sign({
+                        email: candidate.email,
+                        role: candidate.role,
+                        _id: candidate._id
+                    }, keys.jwt, {expiresIn: 60 * 60});
+                    res.status(200).json({
+                        token: `Bearer ${token}`
+                    });
+                } else {
+                    res.status(401).json({
+                        message: 'INVALID_PASSWORD'
+                    })
+                }
+            } else {
+                res.status(404).json({
+                    message: 'EMAIL_NOT_FOUND'
+                })
+            }
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -33,10 +58,12 @@ class User_controller {
             const salt = await bcrypt.genSalt(10);
             let password = await bcrypt.hash(req.body.password, salt);
             const person = await db.query(
-                `UPDATE person set email = $1, password = $2, role = $3 where _id = $4 RETURNING _id, email, role`,
+                `UPDATE person set email = $1, password = $2, role = $3 where _id = $4 RETURNING email, role, _id`,
                 [req.body.email, password, req.body.role, _id]
             );
-            res.json(person.rows[0]);
+            res.status(200).json({
+                message: `Дані користувача успішно оновлено`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
