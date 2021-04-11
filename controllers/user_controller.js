@@ -21,16 +21,14 @@ class User_controller {
 
     async login(req, res) {
         try {
-            const candidate = await db.query(`SELECT * FROM person where email = $1 `, [req.body.email]);
-
+            const candidate = await db.query(`SELECT email, role, password, _id FROM person where email = ($1) `, [req.body.email]);
             if(candidate) {
                 const passwordCompare = await bcrypt.compare(req.body.password, candidate.rows[0].password);
                 if(passwordCompare) {
-                    console.log(candidate.rows[0]);
                     const token = jwt.sign({
-                        email: candidate.email,
-                        role: candidate.role,
-                        _id: candidate._id
+                        email: candidate.rows[0].email,
+                        role: candidate.rows[0].role,
+                        _id: candidate.rows[0]._id
                     }, keys.jwt, {expiresIn: 60 * 60});
                     res.status(200).json({
                         token: `Bearer ${token}`

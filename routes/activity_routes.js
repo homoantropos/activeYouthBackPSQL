@@ -1,13 +1,14 @@
 const express = require('express');
-const router = express.Router()
+const router = express.Router();
+const passport = require('passport');
+
 const controller = require('../controllers/activity_controller');
 
-router.post('/', controller.createActivity);
-router.patch('/', controller.updateActivity);
+router.post('/', passport.authenticate('jwt', {session: false}), controller.createActivity);
+router.patch('/', passport.authenticate('jwt', {session: false}), controller.updateActivity);
 router.get('/', controller.getAllActivities);
 router.get('/:id', controller.getOneActivityById);
-router.get('/:activityType', controller.getAllActivitiesByActivityType);
 router.get('/:userId', controller.getAllActivitiesByUserId);
-router.delete('/:id', controller.deleteActivity);
+router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.deleteActivity);
 
 module.exports = router
