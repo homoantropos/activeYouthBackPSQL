@@ -19,7 +19,13 @@ class Activity_controller {
 
     async updateActivity(req, res) {
         try {
-
+            const _id = req.params.id;
+            const activity = await db.query(`
+                UPDATE activity set title = $1, author = $2, content = $3, kindOfActivity = $4 where _id = $5
+                RETURNING title, author, content, kindOfActivity, _id`,
+                [req.body.title, req.body.author, req.body.content, req.body.kindOfActivity, _id]
+            );
+            res.status(200).json(activity.rows[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -53,7 +59,9 @@ class Activity_controller {
 
     async getOneActivityById(req, res) {
         try {
-
+            const _id = req.params.id;
+            const activity = await db.query(`SELECT title, author, content, date, kindOfActivity, person_id FROM activity where _id = ($1)`, [_id]);
+            res.status(200).json(activity.rows[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -63,7 +71,11 @@ class Activity_controller {
 
     async deleteActivity(req, res) {
         try {
-
+            const id = req.params.id;
+            await db.query(`DELETE FROM activity where _id = ($1)`, [id]);
+            res.status(201).json({
+                message: `Урок успішно видалено`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

@@ -11,7 +11,7 @@ create TABLE activity(
     author VARCHAR NOT NULL,
     content TEXT NOT NULL,
     date DATE NOT NULL,
-    kindOfActivity VARCHAR NOT NULL,
+    kindofactivity VARCHAR NOT NULL,
     _id INT GENERATED ALWAYS AS IDENTITY,
     PRIMARY KEY (_id),
     person_id INT NOT NULL,
