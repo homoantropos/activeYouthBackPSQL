@@ -22,3 +22,4 @@ create TABLE activity(
             ON UPDATE NO ACTION
 );
 
+INSERT INTO person (email, password, role) values ('santre8@gmail.com', 'test', 'superadmin');
