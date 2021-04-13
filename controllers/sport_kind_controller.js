@@ -16,7 +16,10 @@ class Sports_kind_controller {
 
     async updateSportKind(req, res) {
         try {
-
+            const sportKind = await db.query(
+                `UPDATE sportKind set name = $1 where _id = $2 RETURNING name, _id`,
+                [req.body.name, req.body._id]);
+            res.stat(200).json(sportKind.rows[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -37,7 +40,9 @@ class Sports_kind_controller {
 
     async getOneSportKindById(req, res) {
         try {
-
+            const id = req.params.id;
+            const sportKind = await db.query(`SELECT _id, name FROM sportKind where _id = ($1)`, [id]);
+            res.status(200).json(sportKind.rows[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
