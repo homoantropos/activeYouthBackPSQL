@@ -18,6 +18,7 @@ const regionRoutes = require('./routes/region_routes');
 const reportRoutes = require('./routes/report_routes');
 const resultRoutes = require('./routes/result_routes');
 const sportHallRoutes = require('./routes/sport_hall_routes');
+const sportKindsRoutes = require('./routes/sport_kind_routes');
 const townRoutes = require('./routes/town_routes');
 const userRoutes = require('./routes/user_routes');
 
@@ -43,6 +44,7 @@ app.use('/api/region', regionRoutes);
 app.use('/api/report', reportRoutes);
 app.use('/api/result', resultRoutes);
 app.use('/api/sportHall', sportHallRoutes);
+app.use('/api/sportKind', sportKindsRoutes);
 app.use('/api/town', townRoutes);
 app.use('/api/user', userRoutes);
 

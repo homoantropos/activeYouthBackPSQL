@@ -22,4 +22,27 @@ create TABLE activity(
             ON UPDATE NO ACTION
 );
 
-INSERT INTO person (email, password, role) values ('santre8@gmail.com', 'test', 'superadmin');
+create TABLE sportKind (
+    name VARCHAR NOT NULL UNIQUE,
+    _id INT GENERATED ALWAYS AS IDENTITY
+);
+
+
+create TABLE appointment (
+    title VARCHAR NOT NULL,
+    startDate DATE NOT NULL,
+    finishDate DATE NOT NULL,
+    duration NUMERIC,
+    place Place;
+    organizationsParticipants VARCHAR NOT NULL,
+    sportKind_id,
+    KPKV: number;
+    character: string;
+    participants: string;
+    direction: string;
+    status: string;
+    organiser: string;
+    _id?: string;
+    _userId?: string;
+);
+
