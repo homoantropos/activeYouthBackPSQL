@@ -27,6 +27,10 @@ create TABLE sportKind (
     _id INT GENERATED ALWAYS AS IDENTITY
 );
 
+create TABLE country (
+    name VARCHAR NOT NULL UNIQUE,
+    _id INT GENERATED ALWAYS AS IDENTITY
+);
 
 create TABLE appointment (
     title VARCHAR NOT NULL,

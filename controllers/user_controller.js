@@ -22,7 +22,6 @@ class User_controller {
     async login(req, res) {
         try {
             const candidate = await db.query(`SELECT email, role, password, _id FROM person where email = ($1) `, [req.body.email]);
-            console.log(candidate);
             if (!candidate.rows[0]) {
                 res.status(404).json({
                     message: 'EMAIL_NOT_FOUND'
@@ -61,7 +60,8 @@ class User_controller {
                     [req.body.email, password, req.body.role, _id]
                 );
                 res.status(200).json({
-                    message: `Дані користувача успішно оновлено`
+                    message: `Дані користувача успішно оновлено`,
+                    person
                 });
             } catch (error) {
                 res.status(500).json({
