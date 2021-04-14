@@ -32,6 +32,12 @@ create TABLE country (
     _id INT GENERATED ALWAYS AS IDENTITY
 );
 
+create TABLE region (
+    name VARCHAR NOT NULL UNIQUE,
+    regionsGroup INT NOT NULL,
+    _id INT GENERATED ALWAYS AS IDENTITY
+);
+
 create TABLE appointment (
     title VARCHAR NOT NULL,
     startDate DATE NOT NULL,
