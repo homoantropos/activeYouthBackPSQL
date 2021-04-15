@@ -4,8 +4,11 @@ class Region_controller {
 
     async createRegion(req, res) {
         try {
-            const region = await db.query(`INSERT INTO region (name, regionsgroup) values ($1, $2) RETURNING _id, name, regionsgroup`,
-                [req.body.name, req.body.regionsgroup]);
+            const country_id = await db.query(`SELECT _id FROM country where country.name = ($1)`, [req.body.country]);
+            console.log(country_id);
+            const region = await db.query(`INSERT INTO region (name, regionsgroup, country_id) values ($1, $2, $3) RETURNING _id, name, regionsgroup, country_id`,
+                [req.body.name, req.body.regionsgroup, country_id.rows[0]._id]);
+            console.log(region);
             res.status(201).json(region.rows[0]);
         } catch (error) {
             res.status(500).json({
