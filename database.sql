@@ -36,34 +36,81 @@ create TABLE country (
 );
 
 create TABLE region (
-    name VARCHAR NOT NULL UNIQUE,
+    region_name VARCHAR NOT NULL UNIQUE,
     regionsGroup INT NOT NULL,
     country_id INT NOT NULL,
-    _id INT GENERATED ALWAYS AS IDENTITY,
-    PRIMARY KEY (_id),
+    region_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (region_id),
     CONSTRAINT fk_country
         FOREIGN KEY (country_id)
         REFERENCES country(_id)
-        ON DELETE CASCADE
-        ON UPDATE NO ACTION
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION
+);
+
+create TABLE town (
+    town_name VARCHAR NOT NULL,
+    town_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (town_id),
+    countryId INT NOT NULL,
+    regionId INT,
+    UNIQUE (town_name, countryId),
+    CONSTRAINT fk_country
+        FOREIGN KEY (countryId)
+        REFERENCES country(_id)
+                ON DELETE CASCADE
+                ON UPDATE NO ACTION,
+    CONSTRAINT fk_region
+        FOREIGN KEY (regionId)
+        REFERENCES region(region_id)
+                ON DELETE CASCADE
+                ON UPDATE NO ACTION
+);
+
+create TABLE sportHall (
+    sportHall_name VARCHAR,
+    address VARCHAR,
+    sportHall_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (sportHall_id),
+    town_id INT NOT NULL,
+    UNIQUE (sportHall_name, town_id),
+    CONSTRAINT fk_town
+        FOREIGN KEY (town_id)
+        REFERENCES town(town_id)
+                ON DELETE CASCADE
+                ON UPDATE NO ACTION
+);
+
+create TABLE place (
+    town_id INT,
+    sportHall_id INT,
+    place_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (place_id),
+    CONSTRAINT fk_town
+        FOREIGN KEY (town_id)
+        REFERENCES town(town_id)
+                ON DELETE CASCADE
+                ON UPDATE NO ACTION
 );
 
 create TABLE appointment (
     title VARCHAR NOT NULL,
     startDate DATE NOT NULL,
     finishDate DATE NOT NULL,
-    duration NUMERIC,
-    place Place;
+    duration INT NOT NULL,
+    place_id INT NOT NULL,
     organizationsParticipants VARCHAR NOT NULL,
-    sportKind_id,
-    KPKV: number;
-    character: string;
-    participants: string;
-    direction: string;
-    status: string;
-    organiser: string;
-    _id?: string;
-    _userId?: string;
+    sportKind_id INT NOT NULL,
+    KPKV INT NOT NULL,
+    character VARCHAR NOT NULL,
+    participants VARCHAR NOT NULL,
+    direction VARCHAR NOT NULL,
+    status VARCHAR NOT NULL,
+    organiser VARCHAR NOT NULL,
+    _id INT GENERATED ALWAYS AS IDENTITY,
+    person_id INT NOT NULL,
+    PRIMARY KEY (_id),
+
 );
 
 INSERT INTO sportkind(name, code)

@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 
 const activityRoutes = require('./routes/activity_routes');
-const addressRoutes = require('./routes/address_routes');
 const appointmentRoutes = require('./routes/appointment_routes');
 const coachRoutes = require('./routes/coach_routes');
 const countryRoutes = require('./routes/country_routes');
@@ -29,24 +28,27 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(require('cors')());
 
-app.use('/api/activity', activityRoutes);
-app.use('/api/address', addressRoutes);
-app.use('/api/appointment', appointmentRoutes);
-app.use('/api/coach', coachRoutes);
-app.use('/api/country', countryRoutes);
-app.use('/api/eduEntity', eduEntityRoutes);
-app.use('/api/expenses', expensesRoutes);
-app.use('/api/member', memberRoutes);
+
 app.use('/api/news', newsRoutes);
-app.use('/api/participant', participantRoutes);
-app.use('/api/place', placeRoutes);
-app.use('/api/region', regionRoutes);
-app.use('/api/report', reportRoutes);
-app.use('/api/result', resultRoutes);
-app.use('/api/sportHall', sportHallRoutes);
-app.use('/api/sportKind', sportKindsRoutes);
-app.use('/api/town', townRoutes);
 app.use('/api/user', userRoutes);
 
+app.use('/api/activity', activityRoutes);
+
+app.use('/api/appointment', appointmentRoutes);
+app.use('/api/sportKind', sportKindsRoutes);
+app.use('/api/member', memberRoutes);
+app.use('/api/expenses', expensesRoutes);
+app.use('/api/report', reportRoutes);
+
+app.use('/api/result', resultRoutes);
+app.use('/api/participant', participantRoutes);
+app.use('/api/coach', coachRoutes);
+app.use('/api/eduEntity', eduEntityRoutes);
+
+app.use('/api/place', placeRoutes);
+app.use('/api/country', countryRoutes);
+app.use('/api/region', regionRoutes);
+app.use('/api/town', townRoutes);
+app.use('/api/sportHall', sportHallRoutes);
 
 module.exports = app
