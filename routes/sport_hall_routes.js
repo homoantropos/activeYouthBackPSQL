@@ -1,14 +1,12 @@
 const express = require('express');
-const router = express.Router()
+const router = express.Router();
+const passport = require('passport');
 const controller = require('../controllers/sport_hall_controller');
 
-router.post('/', controller.createSportHall);
-router.patch('/', controller.updateSportHall);
+router.post('/', passport.authenticate('jwt', {session: false}), controller.createSportHall);
+router.patch('/', passport.authenticate('jwt', {session: false}), controller.updateSportHall);
 router.get('/', controller.getAllSportHalls);
 router.get('/:id', controller.getOneSportHallById);
-router.get('/:countryId', controller.getSportHallsByCountry);
-router.get('/:regionId', controller.getSportHallsByRegion);
-router.get('/:townId', controller.getSportHallsByTown);
-router.delete('/:id', controller.deleteSportHall);
+router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.deleteSportHall);
 
 module.exports = router

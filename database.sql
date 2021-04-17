@@ -72,23 +72,22 @@ create TABLE sportHall (
     address VARCHAR,
     sportHall_id INT GENERATED ALWAYS AS IDENTITY,
     PRIMARY KEY (sportHall_id),
-    town_id INT NOT NULL,
-    UNIQUE (sportHall_name, town_id),
+    townId INT NOT NULL,
+    UNIQUE (sportHall_name, townId),
     CONSTRAINT fk_town
-        FOREIGN KEY (town_id)
+        FOREIGN KEY (townId)
         REFERENCES town(town_id)
                 ON DELETE CASCADE
                 ON UPDATE NO ACTION
 );
 
 create TABLE place (
-    town_id INT,
-    sportHall_id INT,
+    sportHallId INT,
     place_id INT GENERATED ALWAYS AS IDENTITY,
     PRIMARY KEY (place_id),
-    CONSTRAINT fk_town
-        FOREIGN KEY (town_id)
-        REFERENCES town(town_id)
+    CONSTRAINT fk_sportHall
+        FOREIGN KEY (sportHallId)
+        REFERENCES sportHall(sportHall_id)
                 ON DELETE CASCADE
                 ON UPDATE NO ACTION
 );
