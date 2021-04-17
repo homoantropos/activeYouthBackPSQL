@@ -4,7 +4,7 @@ class Country_controller {
 
     async createCountry(req, res) {
         try {
-            const country = await db.query(`INSERT INTO country (name) values ($1) RETURNING _id, name`,
+            const country = await db.query(`INSERT INTO country (country_name) values ($1) RETURNING country_id, country_name`,
                 [req.body.name]);
             res.status(201).json(country.rows[0]);
         } catch (error) {
@@ -17,8 +17,8 @@ class Country_controller {
     async updateCountry(req, res) {
         try {
             const country = await db.query(
-                `UPDATE country set name = $1 where _id = $2 RETURNING name, _id`,
-                [req.body.name, req.body._id]);
+                `UPDATE country set country_name = $1 where country_id = $2 RETURNING country_name, country_id`,
+                [req.body.name, req.body.country_id]);
             res.stat(200).json(country.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -29,7 +29,7 @@ class Country_controller {
 
     async getAllCountries(req, res) {
         try {
-            const countries = await db.query(`SELECT _id, name FROM country ORDER BY name`);
+            const countries = await db.query(`SELECT country_id, country_name FROM country ORDER BY country_name`);
             res.status(200).json(countries.rows);
         } catch (error) {
             res.status(500).json({
@@ -41,7 +41,7 @@ class Country_controller {
     async getOneCountryById(req, res) {
         try {
             const id = req.params.id;
-            const country = await db.query(`SELECT _id, name FROM country where _id = ($1)`, [id]);
+            const country = await db.query(`SELECT country_id, country_name FROM country where country_id = ($1)`, [id]);
             res.status(200).json(country.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -53,7 +53,7 @@ class Country_controller {
     async deleteCountry(req, res) {
         try {
             const id = req.params.id;
-            await db.query(`DELETE FROM country where _id = ($1)`, [id]);
+            await db.query(`DELETE FROM country where country_id = ($1)`, [id]);
             res.status(200).json({
                 message: `Назву країни успішно видалено з бази даних.`
             });

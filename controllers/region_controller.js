@@ -4,10 +4,32 @@ class Region_controller {
 
     async createRegion(req, res) {
         try {
-            const country_id = await db.query(`SELECT _id FROM country where country.name = ($1)`, [req.body.country]);
+            console.log(req.body);
+            const country_id = await db.query(`
+                                SELECT
+                                    country_id
+                                FROM
+                                    country
+                                WHERE
+                                    country.country_name = ($1)`, [req.body.country]);
             const region = await db.query(`
-INSERT INTO region (region_name, regionsgroup, country_id) values ($1, $2, $3) RETURNING region_id, region_name, regionsgroup, country_id`,
-                [req.body.name, req.body.regionsgroup, country_id.rows[0]._id]);
+                                INSERT INTO region
+                                    (region_name,
+                                     region_group,
+                                     countryId)
+                                VALUES
+                                    ($1,
+                                     $2,
+                                     $3)
+                                RETURNING
+                                    region_id,
+                                    region_name,
+                                    region_group,
+                                    countryId`,
+                                [req.body.region_name,
+                                 req.body.region_group,
+                                 country_id.rows[0].country_id
+                                ]);
             res.status(201).json(region.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -19,10 +41,22 @@ INSERT INTO region (region_name, regionsgroup, country_id) values ($1, $2, $3) R
     async updateRegion(req, res) {
         try {
             const region = await db.query(`
-UPDATE region set region_name = $1, regionsgroup = $2 where region_id = $3
-RETURNING region_name, regionsgroup, region_id`,
-                [req.body.name, req.body.regionsgroup, req.body._id]);
-            res.stat(200).json(region.rows[0]);
+                                UPDATE
+                                    region
+                                SET
+                                    region_name = $1,
+                                    region_group = $2
+                                WHERE
+                                    region_id = $3
+                                RETURNING
+                                    region_name,
+                                    region_group,
+                                    region_id`,
+                                [req.body.region_name,
+                                 req.body.region_group,
+                                 req.body.region_id]);
+            res.status(200).json(region.rows[0]);
+            console.log(region.rows[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -32,7 +66,15 @@ RETURNING region_name, regionsgroup, region_id`,
 
     async getAllRegions(req, res) {
         try {
-            const regions = await db.query(`SELECT region_id, region_name, regionsgroup FROM region ORDER BY region_name`);
+            const regions = await db.query(`
+                                SELECT
+                                    region_id,
+                                    region_name,
+                                    region_group
+                                FROM
+                                    region
+                                ORDER BY
+                                    region_name`);
             res.status(200).json(regions.rows);
         } catch (error) {
             res.status(500).json({
@@ -43,8 +85,17 @@ RETURNING region_name, regionsgroup, region_id`,
 
     async getRegionsByGroup(req, res) {
         try {
-            const group = req.params.regionsgroup;
-            const regions = await db.query(`SELECT region_id, region_name, regionsGroup FROM region where regionsgroup = ($1)`, [group]);
+            const group = req.params.region_group;
+            const regions = await db.query(`
+                                SELECT
+                                    region_id,
+                                    region_name,
+                                    region_group
+                                FROM
+                                    region
+                                WHERE
+                                    region_group = ($1)`,
+                                [group]);
             res.status(200).json(regions.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -56,7 +107,16 @@ RETURNING region_name, regionsgroup, region_id`,
     async getOneRegionById(req, res) {
         try {
             const id = req.params.id;
-            const regions = await db.query(`SELECT region_id, region_name, regionsgroup FROM region where region_id = ($1)`, [id]);
+            const regions = await db.query(`
+                                SELECT
+                                    region_id,
+                                    region_name,
+                                    region_group
+                                FROM
+                                    region
+                                WHERE
+                                    region_id = ($1)`,
+                                [id]);
             res.status(200).json(regions.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -68,7 +128,13 @@ RETURNING region_name, regionsgroup, region_id`,
     async deleteRegion(req, res) {
         try {
             const id = req.params.id;
-            await db.query(`DELETE FROM region where region_id = ($1)`, [id]);
+            await db.query(`
+                DELETE
+                FROM
+                    region
+                WHERE
+                    region_id = ($1)`,
+                [id]);
             res.status(200).json({
                 message: `Назву регіону успішно видалено з бази даних.`
             });

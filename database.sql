@@ -30,20 +30,20 @@ create TABLE sportKind (
 );
 
 create TABLE country (
-    name VARCHAR NOT NULL UNIQUE,
-    _id INT GENERATED ALWAYS AS IDENTITY,
-    PRIMARY KEY (_id)
+    country_name VARCHAR NOT NULL UNIQUE,
+    country_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (country_id)
 );
 
 create TABLE region (
     region_name VARCHAR NOT NULL UNIQUE,
-    regionsGroup INT NOT NULL,
-    country_id INT NOT NULL,
+    region_group INT NOT NULL,
+    countryId INT NOT NULL,
     region_id INT GENERATED ALWAYS AS IDENTITY,
     PRIMARY KEY (region_id),
     CONSTRAINT fk_country
-        FOREIGN KEY (country_id)
-        REFERENCES country(_id)
+        FOREIGN KEY (countryId)
+        REFERENCES country(country_id)
             ON DELETE CASCADE
             ON UPDATE NO ACTION
 );
@@ -57,7 +57,7 @@ create TABLE town (
     UNIQUE (town_name, countryId),
     CONSTRAINT fk_country
         FOREIGN KEY (countryId)
-        REFERENCES country(_id)
+        REFERENCES country(country_id)
                 ON DELETE CASCADE
                 ON UPDATE NO ACTION,
     CONSTRAINT fk_region
@@ -112,6 +112,37 @@ create TABLE appointment (
     PRIMARY KEY (_id),
 
 );
+
+INSERT INTO region(region_name, region_group, countryId )
+    VALUES
+        ('Автономна Республіка Крим', 1, 232),
+        ('Вінницька область', 2, 232),
+        ('Волинська область', 3, 232),
+        ('Дніпропетровська область', 1, 232),
+        ('Донецька область', 2, 232),
+        ('Житомирська область', 3, 232),
+        ('Закарпатська область', 3, 232),
+        ('Запорізька область', 1, 232),
+        ('Івано-Франківська область', 2, 232),
+        ('Київська область', 3, 232),
+        ('Кіровоградська область', 3, 232),
+        ('Луганська область', 3, 232),
+        ('Львівська область', 1, 232),
+        ('Миколаївська область', 2, 232),
+        ('Одеська область', 1, 232),
+        ('Полтавська область', 2, 232),
+        ('Рівненська область', 2, 232),
+        ('Сумська область', 3, 232),
+        ('Тернопільська область', 2, 232),
+        ('Харківська область', 1, 232),
+        ('Херсонська область', 3, 232),
+        ('Хмельницька область', 2, 232),
+        ('Черкаська область', 2, 232),
+        ('Чернівецька область', 3, 232),
+        ('Чернігівська область', 3, 232),
+        ('місто Київ', 1, 232),
+        ('місто Севастополь', 3, 232)
+;
 
 INSERT INTO sportkind(name, code)
     VALUES
@@ -345,7 +376,7 @@ INSERT INTO sportkind(name, code)
         ('Гольф', 'ІІІ.052.')
 ;
 
-INSERT INTO country(name)
+INSERT INTO country(country_name)
  VALUES
             ('АФГАНІСТАН'),
             ('АЛБАНІЯ'),
