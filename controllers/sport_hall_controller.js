@@ -4,33 +4,12 @@ class Sport_hall_controller {
 
     async createSportHall(req, res) {
         try {
-            const town = await db.query(`
-                                SELECT
-                                    town_id
-                                FROM
-                                    town
-                                WHERE
-                                    town_name = ($1)`,
-                                [req.body.town_name]);
-            const sportHall = await db.query(`
-                                INSERT INTO
-                                    sportHall
-                                        (sportHall_name,
-                                         address,
-                                         townId)
-                                VALUES
-                                    ($1,
-                                     $2,
-                                     $3)
-                                RETURNING
-                                    sportHall_id,
-                                    sportHall_name,
-                                    address,
-                                    townId`,
-                                [req.body.sportHall_name,
-                                 req.body.address,
-                                 town.rows[0].town_id
-                                ]);
+            console.log(req);
+            const town = await db.query(`SELECT town_id FROM town WHERE town_name = ($1)`, [req.body.town_name]);
+            const sportHall = await db.query(`INSERT INTO sportHall (sportHall_name, address, townId)
+                                                VALUES ($1, $2, $3)
+                                                RETURNING sportHall_id, sportHall_name, address, townId`,
+                                                [req.body.sportHall_name, req.body.address, town.rows[0].town_id]);
             res.status(201).json(sportHall.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -83,6 +62,7 @@ class Sport_hall_controller {
                 ORDER BY
                      sportHall_name
                 `);
+            console.log(sportHalls.rows);
             res.status(200).json(sportHalls.rows);
         } catch (error) {
             res.status(500).json({

@@ -82,13 +82,31 @@ create TABLE sportHall (
 );
 
 create TABLE place (
+    countryId INT,
+    regionId INT,
+    townId INT,
     sportHallId INT,
     place_id INT GENERATED ALWAYS AS IDENTITY,
     PRIMARY KEY (place_id),
+    CONSTRAINT fk_country
+        FOREIGN KEY (countryId)
+        REFERENCES country(country_id)
+                ON DELETE NO ACTION
+                ON UPDATE NO ACTION,
+    CONSTRAINT fk_region
+        FOREIGN KEY (regionId)
+        REFERENCES region(region_id)
+                ON DELETE NO ACTION
+                ON UPDATE NO ACTION,
+    CONSTRAINT fk_town
+        FOREIGN KEY (townId)
+        REFERENCES town(town_id)
+                ON DELETE NO ACTION
+                ON UPDATE NO ACTION,
     CONSTRAINT fk_sportHall
         FOREIGN KEY (sportHallId)
         REFERENCES sportHall(sportHall_id)
-                ON DELETE CASCADE
+                ON DELETE NO ACTION
                 ON UPDATE NO ACTION
 );
 
@@ -97,18 +115,33 @@ create TABLE appointment (
     startDate DATE NOT NULL,
     finishDate DATE NOT NULL,
     duration INT NOT NULL,
-    place_id INT NOT NULL,
+    placeId INT NOT NULL,
     organizationsParticipants VARCHAR NOT NULL,
-    sportKind_id INT NOT NULL,
+    sportKindId INT NOT NULL,
     KPKV INT NOT NULL,
-    character VARCHAR NOT NULL,
+    haracter VARCHAR NOT NULL,
     participants VARCHAR NOT NULL,
     direction VARCHAR NOT NULL,
     status VARCHAR NOT NULL,
     organiser VARCHAR NOT NULL,
-    _id INT GENERATED ALWAYS AS IDENTITY,
-    person_id INT NOT NULL,
-    PRIMARY KEY (_id),
+    appointment_id INT GENERATED ALWAYS AS IDENTITY,
+    personId INT NOT NULL,
+    PRIMARY KEY (appointment_id),
+    CONSTRAINT fk_place
+        FOREIGN KEY (placeId)
+        REFERENCES place(place_id)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT fk_sportKind
+        FOREIGN KEY (sportKindId)
+        REFERENCES sportKind(_id)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT fk_person
+        FOREIGN KEY (personId)
+        REFERENCES person(_id)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 );
 
 
