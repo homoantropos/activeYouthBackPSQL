@@ -3,19 +3,17 @@
 "startDate": "Tue Apr 20 2021 00:00:00 GMT+0300 (Eastern European Summer Time)",
 "finishDate": "Fri Apr 23 2021 00:00:00 GMT+0300 (Eastern European Summer Time)",
 "duration": 4,
-"country": "",
+"country": "УКРАЇНА",
 "region": "Сумська область",
 "town": "Суми",
-"sportHallName": "",
-"address": "",
-
-KPKV: "2201310"
-character: "О/К"
-direction: "sport"
-
-"organiser": "КФВС МОН"
-"organizationsParticipants": "збірні учнів регіонів"
-"participants": "schoolchild"
-"sportKind": "Лижні гонки "
+"sportHall": "легкоатлетичний манеж СУМДУ",
+"address": "вул. такато",
+"kpkv": "2201310",
+"character": "О/К",
+"direction": "sport",
+"organiser": "КФВС МОН",
+"organizationsParticipants": "збірні учнів регіонів",
+"participants": "schoolchild",
+"sportKind": "Лижні гонки",
 "status": "ukrainian"
 }

@@ -117,29 +117,29 @@ ALTER TABLE sportHall
 /* TODO - замінити назву townId на town_id в ключі UNIQUE*/
 
 create TABLE place (
-    countryId INT,
-    regionId INT,
-    townId INT,
-    sportHallId INT,
+    country_id INT,
+    region_id INT,
+    town_id INT,
+    sportHall_id INT,
     place_id INT GENERATED ALWAYS AS IDENTITY,
     PRIMARY KEY (place_id),
     CONSTRAINT fk_country
-        FOREIGN KEY (countryId)
+        FOREIGN KEY (country_id)
         REFERENCES country(country_id)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION,
     CONSTRAINT fk_region
-        FOREIGN KEY (regionId)
+        FOREIGN KEY (region_id)
         REFERENCES region(region_id)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION,
     CONSTRAINT fk_town
-        FOREIGN KEY (townId)
+        FOREIGN KEY (town_id)
         REFERENCES town(town_id)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION,
     CONSTRAINT fk_sportHall
-        FOREIGN KEY (sportHallId)
+        FOREIGN KEY (sportHall_id)
         REFERENCES sportHall(sportHall_id)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION
@@ -150,31 +150,31 @@ create TABLE appointment (
     startDate DATE NOT NULL,
     finishDate DATE NOT NULL,
     duration INT NOT NULL,
-    placeId INT NOT NULL,
+    place_id INT NOT NULL,
     organizationsParticipants VARCHAR NOT NULL,
-    sportKindId INT NOT NULL,
-    KPKV INT NOT NULL,
+    sportKind_id INT NOT NULL,
+    kpkv INT NOT NULL,
     haracter VARCHAR NOT NULL,
     participants VARCHAR NOT NULL,
     direction VARCHAR NOT NULL,
     status VARCHAR NOT NULL,
     organiser VARCHAR NOT NULL,
     appointment_id INT GENERATED ALWAYS AS IDENTITY,
-    personId INT NOT NULL,
+    person_id INT NOT NULL,
     PRIMARY KEY (appointment_id),
     CONSTRAINT fk_place
-        FOREIGN KEY (placeId)
+        FOREIGN KEY (place_id)
         REFERENCES place(place_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
     CONSTRAINT fk_sportKind
-        FOREIGN KEY (sportKindId)
-        REFERENCES sportKind(_id)
+        FOREIGN KEY (sportKind_id)
+        REFERENCES sportKind(sportKind_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
     CONSTRAINT fk_person
-        FOREIGN KEY (personId)
-        REFERENCES person(_id)
+        FOREIGN KEY (person_id)
+        REFERENCES person(person_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
