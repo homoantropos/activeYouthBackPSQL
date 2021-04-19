@@ -24,8 +24,8 @@ class Town_controller {
                                 INSERT INTO
                                     town
                                         (town_name,
-                                         countryId,
-                                         regionId)
+                                         country_id,
+                                         region_id)
                                 VALUES
                                     ($1,
                                      $2,
@@ -33,8 +33,8 @@ class Town_controller {
                                 RETURNING
                                     town_id,
                                     town_name,
-                                    countryId,
-                                    regionId`,
+                                    country_id,
+                                    region_id`,
                                 [req.body.town_name,
                                  country.rows[0].country_id,
                                  region.rows[0].region_id]);
@@ -58,8 +58,8 @@ class Town_controller {
                                 RETURNING
                                     town_id,
                                     town_name,
-                                    countryId,
-                                    regionId`,
+                                    country_id,
+                                    region_id`,
                                 [req.body.town_name,
                                  req.body.town_id]);
             res.status(200).json(town.rows[0]);
@@ -81,9 +81,9 @@ class Town_controller {
                             FROM
                                 town
                             INNER JOIN country
-                                ON countryId = country_id
+                                ON town.country_id = country.country_id
                             INNER JOIN region
-                                ON regionId = region_id    
+                                ON town.region_id = region.region_id    
                             ORDER BY town_name`);
             res.status(200).json(towns.rows);
         } catch (error) {
@@ -107,12 +107,12 @@ class Town_controller {
                             SELECT
                                 town_id,
                                 town_name,
-                                countryId,
-                                regionId
+                                country_id,
+                                region_id
                             FROM
                                 town
                             WHERE
-                                countryId = ($1)`,
+                                town.country_id = ($1)`,
                             [country_id]);
             res.status(200).json(towns.rows[0]);
         } catch (error) {
@@ -136,12 +136,12 @@ class Town_controller {
                             SELECT
                                 town_id,
                                 town_name,
-                                countryId,
-                                regionId
+                                country_id,
+                                region_id
                             FROM
                                 town
                             WHERE
-                                regionId = ($1)`,
+                                town.region_id = ($1)`,
                             [region_id]);
             res.status(200).json(towns.rows[0]);
         } catch (error) {
@@ -162,9 +162,9 @@ class Town_controller {
                                 region_name
                             FROM town
                             INNER JOIN country
-                                ON countryId = country_id
+                                ON town.country_id = country.country_id
                             INNER JOIN region
-                                ON regionId = region_id
+                                ON town.region_id = region.region_id
                             WHERE town_id = ($1)`, [town_id]);
             res.status(200).json(town.rows[0]);
         } catch (error) {

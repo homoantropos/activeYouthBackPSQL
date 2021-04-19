@@ -1,4 +1,4 @@
-INSERT INTO town(town_name, countryId, regionId)
+INSERT INTO town(town_name, country_id, region_id)
 VALUES
 ('Авдіївка', 232, 5),
 ('Алмазна', 232, 12),

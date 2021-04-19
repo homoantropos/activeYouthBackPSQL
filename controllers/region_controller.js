@@ -16,7 +16,7 @@ class Region_controller {
                                 INSERT INTO region
                                     (region_name,
                                      region_group,
-                                     countryId)
+                                     country_id)
                                 VALUES
                                     ($1,
                                      $2,
@@ -25,7 +25,7 @@ class Region_controller {
                                     region_id,
                                     region_name,
                                     region_group,
-                                    countryId`,
+                                    country_id`,
                                 [req.body.region_name,
                                  req.body.region_group,
                                  country_id.rows[0].country_id

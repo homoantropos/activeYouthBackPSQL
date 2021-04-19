@@ -9,7 +9,7 @@ class User_controller {
         try {
             const salt = await bcrypt.genSalt(10);
             let password = await bcrypt.hash(req.body.password, salt);
-            const person = await db.query(`INSERT INTO person (email, password, role) values ($1, $2, $3) RETURNING _id, email, role`,
+            const person = await db.query(`INSERT INTO person (email, password, role) values ($1, $2, $3) RETURNING person_id, email, role`,
                 [req.body.email, password, req.body.role]);
             res.status(201).json(person.rows[0]);
         } catch (error) {
@@ -21,7 +21,7 @@ class User_controller {
 
     async login(req, res) {
         try {
-            const candidate = await db.query(`SELECT email, role, password, _id FROM person where email = ($1) `, [req.body.email]);
+            const candidate = await db.query(`SELECT email, role, password, person_id FROM person where email = ($1) `, [req.body.email]);
             if (!candidate.rows[0]) {
                 res.status(404).json({
                     message: 'EMAIL_NOT_FOUND'
@@ -32,7 +32,7 @@ class User_controller {
                     const token = jwt.sign({
                         email: candidate.rows[0].email,
                         role: candidate.rows[0].role,
-                        _id: candidate.rows[0]._id
+                        person_id: candidate.rows[0].person_id
                     }, keys.jwt, {expiresIn: 60 * 60});
                     res.status(200).json({
                         token: `Bearer ${token}`
@@ -52,12 +52,12 @@ class User_controller {
 
         async updateUser(req, res) {
             try {
-                const _id = req.params.id;
+                const person_id = req.params.id;
                 const salt = await bcrypt.genSalt(10);
                 let password = await bcrypt.hash(req.body.password, salt);
                 const person = await db.query(
-                    `UPDATE person set email = $1, password = $2, role = $3 where _id = $4 RETURNING email, role, _id`,
-                    [req.body.email, password, req.body.role, _id]
+                    `UPDATE person set email = $1, password = $2, role = $3 where person_id = ($4) RETURNING email, role, person_id`,
+                    [req.body.email, password, req.body.role, person_id]
                 );
                 res.status(200).json({
                     message: `Дані користувача успішно оновлено`,
@@ -72,7 +72,7 @@ class User_controller {
 
         async getAllUsers(req, res) {
             try {
-                const persons = await db.query(`SELECT _id, email, role FROM person ORDER BY role`);
+                const persons = await db.query(`SELECT person_id, email, role FROM person ORDER BY role`);
                 res.status(201).json(persons.rows);
             } catch (error) {
                 res.status(500).json({
@@ -84,7 +84,7 @@ class User_controller {
         async getOneUserById(req, res) {
             try {
                 const id = req.params.id;
-                const person = await db.query(`SELECT _id, email, role FROM person where _id = ($1)`, [id]);
+                const person = await db.query(`SELECT person_id, email, role FROM person where person_id = ($1)`, [id]);
                 res.status(201).json(person.rows[0]);
             } catch (error) {
                 res.status(500).json({
@@ -96,7 +96,7 @@ class User_controller {
         async deleteUser(req, res) {
             try {
                 const id = req.params.id;
-                await db.query(`DELETE FROM person where _id = ($1)`, [id]);
+                await db.query(`DELETE FROM person where person_id = ($1)`, [id]);
                 res.status(201).json({
                     message: `Користувача успішно видалено`
                 });
