@@ -13,11 +13,11 @@ create TABLE activity(
     date DATE NOT NULL,
     kindofactivity VARCHAR NOT NULL,
     activity_id INT GENERATED ALWAYS AS IDENTITY,
-    PRIMARY KEY (_id),
+    PRIMARY KEY (activity_id),
     person_id INT NOT NULL,
     CONSTRAINT fk_person
         FOREIGN KEY (person_id)
-            REFERENCES person(_id)
+            REFERENCES person(person_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
