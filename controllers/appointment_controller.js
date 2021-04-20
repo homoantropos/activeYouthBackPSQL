@@ -1,4 +1,5 @@
 const db = require('../db');
+const quiser = require('./appointment_quiser');
 
 class Appointment_controller {
 
@@ -111,24 +112,26 @@ class Appointment_controller {
         }
     }
 
+
+
     async getAllAppointments(req, res) {
         try {
-            const appointment = await db.query(`
-            SELECT
-            title,
-                   startDate,
-                   finishDate,
-                   country_name, region_name, town_name, sportHall_name
-                   FROM appointment
-            INNER JOIN country
-            ON appointment.country_id = country.country_id
-            INNER JOIN region
-            ON appointment.region_id = region.region_id
-            INNER JOIN town
-            ON appointment.town_id = town.town_id
-            INNER JOIN sportHall
-            ON appointment.sportHall_id = sportHall.sporthall_id
-            `);
+            const appointments =  await quiser.AllAppointmentsQuery();
+            console.log(appointments.rows);
+            res.status(200).json(appointments.rows);
+        } catch (error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
+
+    async getAppointmentsByDate(req, res) {
+
+        try {
+            const dateNow = new Date();
+            console.log(dateNow);
+            const appointment = this.AllAppointmentsQuery(req, res).filter(a => a.startDate > dateNow);
             res.status(200).json(appointment.rows);
         } catch (error) {
             res.status(500).json({
