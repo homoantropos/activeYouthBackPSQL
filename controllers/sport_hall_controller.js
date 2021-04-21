@@ -19,14 +19,16 @@ class Sport_hall_controller {
 
     async updateSportHall(req, res) {
         try {
+            const town_id = await db.query(`SELECT town_id FROM town WHERE town_name=($1)`, [req.body.town_name])
             const sportHall = await db.query(`
                                     UPDATE
                                         sportHall
                                     SET
                                         sportHall_name = $1,
-                                        address = $2
+                                        address = $2,
+                                        town_id = $3
                                     WHERE
-                                        sportHall_id = $3
+                                        sportHall_id = $4
                                     RETURNING
                                         sportHall_id,
                                         sportHall_name,
@@ -34,6 +36,7 @@ class Sport_hall_controller {
                                         town_id`,
                                     [req.body.sportHall_name,
                                      req.body.address,
+                                     town_id.rows[0].town_id,
                                      req.body.sportHall_id
                                     ]);
             res.status(200).json(sportHall.rows[0]);

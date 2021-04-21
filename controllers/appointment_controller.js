@@ -112,27 +112,10 @@ class Appointment_controller {
         }
     }
 
-
-
     async getAllAppointments(req, res) {
         try {
             const appointments =  await quiser.AllAppointmentsQuery();
-            console.log(appointments.rows);
             res.status(200).json(appointments.rows);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
-    async getAppointmentsByDate(req, res) {
-
-        try {
-            const dateNow = new Date();
-            console.log(dateNow);
-            const appointment = this.AllAppointmentsQuery(req, res).filter(a => a.startDate > dateNow);
-            res.status(200).json(appointment.rows);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -192,7 +175,10 @@ class Appointment_controller {
 
     async deleteAppointment(req, res) {
         try {
-
+            await db.query(`DELETE FROM appointment WHERE appointment_id = ($1)`, [req.params.id]);
+        res.status(201).json({
+            message: `Захід успішно видалено з бази даних.`
+        });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

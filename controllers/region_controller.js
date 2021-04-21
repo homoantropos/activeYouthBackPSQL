@@ -70,9 +70,13 @@ class Region_controller {
                                 SELECT
                                     region_id,
                                     region_name,
-                                    region_group
+                                    region_group,
+                                    country_name
                                 FROM
                                     region
+                                INNER JOIN
+                                    country
+                                ON region.country_id = country.country_id
                                 ORDER BY
                                     region_name`);
             res.status(200).json(regions.rows);
