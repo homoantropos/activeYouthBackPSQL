@@ -15,7 +15,7 @@ class Appointment_quiser{
                 town_name,
                 sportHall_name,
                 organizationsParticipants,
-                sportkind.name,
+                name,
                 kpkv,
                 haracter,
                 participants,
@@ -23,6 +23,7 @@ class Appointment_quiser{
                 status,
                 organiser,
                 appointment_id,
+                address,
                 person_id
             FROM
                 appointment
