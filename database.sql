@@ -133,4 +133,29 @@ create TABLE appointment (
             ON UPDATE NO ACTION
 );
 
-
+create TABLE report (
+    report_id INT GENERATED ALWAYS AS IDENTITY,
+    countries_plan INT NOT NULL,
+    regions_plan INT NOT NULL,
+    educationEntity_plan INT NOT NULL,
+    sportsmen_plan INT NOT NULL,
+    coaches_plan INT NOT NULL,
+    referees_plan INT NOT NULL,
+    others_plan INT NOT NULL,
+    total_plan INT NOT NULL,
+    countries_fact INT,
+    regions_fact INT,
+    educationEntity_fact INT NOT NULL,
+    sportsmen_fact INT NOT NULL,
+    coaches_fact INT NOT NULL,
+    referees_fact INT NOT NULL,
+    others_fact INT NOT NULL,
+    total_fact INT NOT NULL,
+    appointment_id INT NOT NULL,
+    PRIMARY KEY (report_id),
+    CONSTRAINT fk_appointment
+        FOREIGN KEY (appointment_id)
+        REFERENCES appointment(appointment_id)
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION
+);

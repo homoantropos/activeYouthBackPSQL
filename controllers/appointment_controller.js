@@ -5,6 +5,7 @@ class Appointment_controller {
 
     async createAppointment(req, res) {
         try {
+            console.log( req.body);
             const country_id = await db.query(`
                   SELECT country_id
                   FROM country
@@ -37,8 +38,8 @@ class Appointment_controller {
                   WHERE email = ($1)`,
                   [req.user.rows[0].email]);
 
-            const startDate = new Date(req.body.startDate);
-            const finishDate = new Date(req.body.finishDate);
+            const startDate = new Date(req.body.start);
+            const finishDate = new Date(req.body.finish);
             const appointment = await db.query(`
                   INSERT INTO appointment
                   (title,
@@ -76,7 +77,8 @@ class Appointment_controller {
                    direction,
                    status,
                    organiser,
-                   person_id`,
+                   person_id,
+                   appointment_id`,
                   [req.body.title,
                       startDate, finishDate, req.body.duration,
                       country_id.rows[0].country_id, region_id.rows[0].region_id,
@@ -91,8 +93,53 @@ class Appointment_controller {
                       req.body.organiser,
                       person_id.rows[0].person_id
                   ]);
+            const total_plan = req.body.duration;
+            const report = await db.query(`
+                INSERT INTO report (
+                    countries_plan,
+                    regions_plan,
+                    educationEntity_plan,
+                    sportsmen_plan,
+                    coaches_plan,
+                    referees_plan,
+                    others_plan,
+                    total_plan,
+                    appointment_id,
+                    countries_fact,
+                    regions_fact,
+                    educationEntity_fact,
+                    sportsmen_fact,
+                    coaches_fact,
+                    referees_fact,
+                    others_fact,
+                    total_fact
+                )
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                RETURNING
+                    report_id,
+                    countries_plan,
+                    regions_plan,
+                    educationEntity_plan,
+                    sportsmen_plan,
+                    coaches_plan,
+                    referees_plan,
+                    others_plan,
+                    total_plan,
+                    appointment_id
+                `,
+                [
+                req.body.members.countries,
+                req.body.members.regions,
+                req.body.members.educationEntity,
+                req.body.members.sportsmen,
+                req.body.members.coaches,
+                req.body.members.referees,
+                req.body.members.others,
+                total_plan,
+                appointment.rows[0].appointment_id,
+                0, 0, 0, 0, 0, 0, 0, 0
+            ]);
             res.status(201).json(appointment.rows[0]);
-
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -138,8 +185,8 @@ class Appointment_controller {
                   WHERE email = ($1)`,
                 [req.user.rows[0].email]);
 
-            const startDate = new Date(req.body.startDate);
-            const finishDate = new Date(req.body.finishDate);
+            const startDate = new Date(req.body.start);
+            const finishDate = new Date(req.body.finish);
             const appointment = await db.query(`
                   UPDATE appointment
                   SET

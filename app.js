@@ -12,7 +12,6 @@ const expensesRoutes = require('./routes/expenses_routes');
 const memberRoutes = require('./routes/members_routes');
 const newsRoutes = require('./routes/news_routes');
 const participantRoutes = require('./routes/participant_routes');
-const placeRoutes = require('./routes/place_routes');
 const regionRoutes = require('./routes/region_routes');
 const reportRoutes = require('./routes/report_routes');
 const resultRoutes = require('./routes/result_routes');
@@ -45,7 +44,6 @@ app.use('/api/participant', participantRoutes);
 app.use('/api/coach', coachRoutes);
 app.use('/api/eduEntity', eduEntityRoutes);
 
-app.use('/api/place', placeRoutes);
 app.use('/api/country', countryRoutes);
 app.use('/api/region', regionRoutes);
 app.use('/api/town', townRoutes);
