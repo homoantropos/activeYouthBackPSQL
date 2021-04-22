@@ -256,8 +256,9 @@ class Appointment_controller {
 
     async getOneAppointmentById(req, res) {
         try {
+            const appointment_id = Number (req.params.id);
             const appointments =  await quiser.AllAppointmentsQuery();
-            const appointment = appointments.rows.filter(a => a.appointment_id !== req.params.id);
+            const appointment = appointments.rows.filter(row => row.appointment_id === appointment_id);
             res.status(200).json(appointment[0]);
         } catch (error) {
             res.status(500).json({
