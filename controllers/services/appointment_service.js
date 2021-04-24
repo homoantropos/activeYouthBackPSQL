@@ -1,6 +1,6 @@
-const db = require('../db');
+const db = require('../../db');
 
-class Appointment_quiser{
+class Appointment_service {
 
     async AllAppointmentsQuery()
     {
@@ -43,4 +43,4 @@ class Appointment_quiser{
     }
 }
 
- module.exports = new Appointment_quiser()
+ module.exports = new Appointment_service()

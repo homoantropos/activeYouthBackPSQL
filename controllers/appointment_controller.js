@@ -1,11 +1,11 @@
 const db = require('../db');
-const quiser = require('./appointment_quiser');
+const appointmentService = require('./services/appointment_service');
+const reportService = require('./services/report_service');
 
 class Appointment_controller {
 
     async createAppointment(req, res) {
         try {
-            console.log( req.body);
             const country_id = await db.query(`
                   SELECT country_id
                   FROM country
@@ -93,52 +93,8 @@ class Appointment_controller {
                       req.body.organiser,
                       person_id.rows[0].person_id
                   ]);
-            const total_plan = req.body.duration;
-            const report = await db.query(`
-                INSERT INTO report (
-                    countries_plan,
-                    regions_plan,
-                    educationEntity_plan,
-                    sportsmen_plan,
-                    coaches_plan,
-                    referees_plan,
-                    others_plan,
-                    total_plan,
-                    appointment_id,
-                    countries_fact,
-                    regions_fact,
-                    educationEntity_fact,
-                    sportsmen_fact,
-                    coaches_fact,
-                    referees_fact,
-                    others_fact,
-                    total_fact
-                )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-                RETURNING
-                    report_id,
-                    countries_plan,
-                    regions_plan,
-                    educationEntity_plan,
-                    sportsmen_plan,
-                    coaches_plan,
-                    referees_plan,
-                    others_plan,
-                    total_plan,
-                    appointment_id
-                `,
-                [
-                req.body.members.countries,
-                req.body.members.regions,
-                req.body.members.educationEntity,
-                req.body.members.sportsmen,
-                req.body.members.coaches,
-                req.body.members.referees,
-                req.body.members.others,
-                total_plan,
-                appointment.rows[0].appointment_id,
-                0, 0, 0, 0, 0, 0, 0, 0
-            ]);
+            const report = await reportService.saveReportToDB(req, appointment);
+            console.log('report', report.rows[0]);
             res.status(201).json(appointment.rows[0]);
         } catch (error) {
             res.status(500).json({
@@ -252,7 +208,7 @@ class Appointment_controller {
 
     async getAllAppointments(req, res) {
         try {
-            const appointments =  await quiser.AllAppointmentsQuery();
+            const appointments =  await appointmentService.AllAppointmentsQuery();
             res.status(200).json(appointments.rows);
         } catch (error) {
             res.status(500).json({
@@ -304,7 +260,7 @@ class Appointment_controller {
     async getOneAppointmentById(req, res) {
         try {
             const appointment_id = Number (req.params.id);
-            const appointments =  await quiser.AllAppointmentsQuery();
+            const appointments =  await appointmentService.AllAppointmentsQuery();
             const appointment = appointments.rows.filter(row => row.appointment_id === appointment_id);
             res.status(200).json(appointment[0]);
         } catch (error) {

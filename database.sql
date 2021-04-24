@@ -135,6 +135,7 @@ create TABLE appointment (
 
 create TABLE report (
     report_id INT GENERATED ALWAYS AS IDENTITY,
+
     countries_plan INT NOT NULL,
     regions_plan INT NOT NULL,
     educationEntity_plan INT NOT NULL,
@@ -143,14 +144,18 @@ create TABLE report (
     referees_plan INT NOT NULL,
     others_plan INT NOT NULL,
     total_plan INT NOT NULL,
+    person_per_day_plan INT NOT NULL,
+
     countries_fact INT,
     regions_fact INT,
-    educationEntity_fact INT NOT NULL,
-    sportsmen_fact INT NOT NULL,
-    coaches_fact INT NOT NULL,
-    referees_fact INT NOT NULL,
-    others_fact INT NOT NULL,
-    total_fact INT NOT NULL,
+    educationEntity_fact INT,
+    sportsmen_fact INT,
+    coaches_fact INT,
+    referees_fact INT,
+    others_fact INT,
+    total_fact INT,
+    person_per_day_fact INT,
+
     appointment_id INT NOT NULL,
     PRIMARY KEY (report_id),
     CONSTRAINT fk_appointment
