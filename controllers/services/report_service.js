@@ -74,11 +74,24 @@ class ReportService {
                 person_per_day_fact,
                 title,
                 startDate,
-                finishDate
+                finishDate,
+                country.country_name,
+                region.region_name,
+                town.town_name,
+                sportHall_name,
+                address
             FROM
                 report
             INNER JOIN appointment
-                ON report.appointment_id = appointment.appointment_id;
+                ON report.appointment_id = appointment.appointment_id
+            INNER JOIN country
+                ON appointment.country_id = country.country_id
+            INNER JOIN region
+                ON appointment.region_id = region.region_id
+            INNER JOIN town
+                ON appointment.town_id = town.town_id
+            INNER JOIN sportHall
+                ON appointment.sportHall_id = sportHall.sportHall_id
             `)
         )
     }

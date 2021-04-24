@@ -123,7 +123,10 @@ class Report_controller {
 
     async getOneReportById(req, res) {
         try {
-
+            const report_id = Number(req.params.id);
+            const reports = await reportService.getReportsFromDB();
+            const report = reports.rows.filter(row => row.report_id === report_id);
+            res.status(200).json(report[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
