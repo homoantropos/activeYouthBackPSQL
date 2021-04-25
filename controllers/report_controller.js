@@ -123,6 +123,7 @@ class Report_controller {
         }
     }
 
+
     async getAllReports(req, res) {
         try {
             const reports = await reportService.getReportsFromDB();

@@ -217,6 +217,24 @@ class Appointment_controller {
         }
     }
 
+    async getCalendar(req, res) {
+        try{
+            const calendar = await db.query(`
+                SELECT * FROM appointment
+                NATURAL JOIN report
+                NATURAL JOIN country
+                NATURAL JOIN region
+                NATURAL JOIN town
+                NATURAL JOIN sportKind;
+            `);
+            res.status(200).json(calendar.rows);
+        } catch(error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
+
     async getAppointmentsByActivity(req, res) {
         try {
 
