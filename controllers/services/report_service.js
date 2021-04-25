@@ -34,18 +34,18 @@ class ReportService {
                 person_per_day_plan,
                 appointment_id
             `,
-            [
-                req.body.members.countries,
-                req.body.members.regions,
-                req.body.members.educationEntity,
-                req.body.members.sportsmen,
-                req.body.members.coaches,
-                req.body.members.referees,
-                req.body.members.others,
-                total_plan,
-                person_per_day_plan,
-                appointment.rows[0].appointment_id
-            ])
+                [
+                    req.body.members.countries,
+                    req.body.members.regions,
+                    req.body.members.educationEntity,
+                    req.body.members.sportsmen,
+                    req.body.members.coaches,
+                    req.body.members.referees,
+                    req.body.members.others,
+                    total_plan,
+                    person_per_day_plan,
+                    appointment.rows[0].appointment_id
+                ])
         )
     }
 
@@ -96,7 +96,7 @@ class ReportService {
         )
     }
 
-    total_counter (req) {
+    total_counter(req) {
         return (
             Number(req.body.members.countries) +
             Number(req.body.members.regions) +
@@ -105,6 +105,30 @@ class ReportService {
             Number(req.body.members.coaches) +
             Number(req.body.members.referees) +
             Number(req.body.members.others)
+        )
+    }
+
+    total_plan_counter(req) {
+        return (
+            req.body.countries_plan +
+            req.body.regions_plan +
+            req.body.educationEntity_plan +
+            req.body.sportsmen_plan +
+            req.body.coaches_plan +
+            req.body.referees_plan +
+            req.body.others_plan
+        )
+    }
+
+    total_fact_counter(req) {
+        return (
+            req.body.countries_fact +
+            req.body.regions_fact +
+            req.body.educationEntity_fact +
+            req.body.sportsmen_fact +
+            req.body.coaches_fact +
+            req.body.referees_fact +
+            req.body.others_fact
         )
     }
 }

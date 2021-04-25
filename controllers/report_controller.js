@@ -62,7 +62,60 @@ class Report_controller {
 
     async updateReport(req, res) {
         try {
-
+            const duration = await db.query(`
+                SELECT duration
+                FROM appointment
+                WHERE title = $1
+            `, [req.body.title]);
+            const total_plan = reportService.total_plan_counter(req);
+            const person_per_day_plan = total_plan*duration.rows[0].duration;
+            const total_fact = reportService.total_fact_counter(req);
+            const person_per_day_fact = total_fact*duration.rows[0].duration;
+            const report = await db.query(`
+                UPDATE report
+                SET
+                countries_plan = $1,
+                regions_plan = $2,
+                educationEntity_plan = $3,
+                sportsmen_plan = $4,
+                coaches_plan = $5,
+                referees_plan = $6,
+                others_plan = $7,
+                total_plan = $8,
+                person_per_day_plan = $9,
+                countries_fact = $10,
+                regions_fact = $11,
+                educationEntity_fact = $12,
+                sportsmen_fact = $13,
+                coaches_fact = $14,
+                referees_fact = $15,
+                others_fact = $16,
+                total_fact = $17,
+                person_per_day_fact = $18
+                where report_id = $19
+            `,
+            [
+                req.body.countries_plan,
+                req.body.regions_plan,
+                req.body.educationEntity_plan,
+                req.body.sportsmen_plan,
+                req.body.coaches_plan,
+                req.body.referees_plan,
+                req.body.others_plan,
+                total_plan,
+                person_per_day_plan,
+                req.body.countries_fact,
+                req.body.regions_fact,
+                req.body.educationEntity_fact,
+                req.body.sportsmen_fact,
+                req.body.coaches_fact,
+                req.body.referees_fact,
+                req.body.others_fact,
+                total_fact,
+                person_per_day_fact,
+                req.body.report_id
+            ]);
+            res.status(200).json(report.rows[0]);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

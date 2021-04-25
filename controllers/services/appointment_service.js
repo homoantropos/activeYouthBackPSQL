@@ -2,9 +2,9 @@ const db = require('../../db');
 
 class Appointment_service {
 
-    async AllAppointmentsQuery()
-    {
-        const appointments = await db.query(`
+    async AllAppointmentsQuery() {
+        return (
+            await db.query(`
             SELECT
                 title,
                 startDate,
@@ -38,8 +38,8 @@ class Appointment_service {
             INNER JOIN sportkind
             ON appointment.sportkind_id = sportkind.sportkind_id
             ORDER BY startDate
-            `);
-        return appointments;
+            `)
+    )
     }
 }
 
