@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../database/db');
 const reportService = require('./services/report_service');
 
 class Report_controller {

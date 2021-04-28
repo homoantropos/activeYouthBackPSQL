@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../database/db');
 const appointmentService = require('./services/appointment_service');
 const reportService = require('./services/report_service');
 

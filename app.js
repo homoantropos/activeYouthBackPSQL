@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const sequelize = require('./database/sequelize');
 
 const activityRoutes = require('./routes/activity_routes');
 const appointmentRoutes = require('./routes/appointment_routes');
@@ -26,6 +27,13 @@ app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(require('cors')());
+
+sequelize.sync()
+    .then(
+        () => console.log('DataBase connection established successfully.')
+    ).catch(
+    (err)=> console.log(err)
+)
 
 
 app.use('/api/news', newsRoutes);
