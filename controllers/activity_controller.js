@@ -1,15 +1,17 @@
-const db = require('../database/db');
+const Activity = require('../models/Activity');
 
 class Activity_controller {
 
     async createActivity(req, res) {
         try {
-            const activity = await db.query(`
-                INSERT INTO activity (title, author, content, date, kindOfActivity, person_id)
-                values ($1, $2, $3, $4, $5, $6) RETURNING *`,
-                [req.body.title, req.body.author, req.body.content, req.body.date, req.body.kindOfActivity, req.user.rows[0].person_id]
-            );
-            res.status(201).json(activity.rows[0]);
+            const activity = await Activity.create({
+                title: req.body.title,
+                author: req.body.author,
+                content: req.body.content,
+                kindOfActivity: req.body.kindOfActivity,
+                userId: req.user.id
+            });
+            res.status(201).json(activity);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -19,13 +21,15 @@ class Activity_controller {
 
     async updateActivity(req, res) {
         try {
-            const activity_id = req.params.id;
-            const activity = await db.query(`
-                UPDATE activity set title = $1, author = $2, content = $3, kindOfActivity = $4 where activity_id = $5
-                RETURNING title, author, content, kindOfActivity, activity_id`,
-                [req.body.title, req.body.author, req.body.content, req.body.kindOfActivity, activity_id]
-            );
-            res.status(200).json(activity.rows[0]);
+            const activity = await Activity.update({
+                title: req.body.title,
+                author: req.body.author,
+                content: req.body.content,
+                kindOfActivity: req.body.kindOfActivity
+            }, {
+                where: {id: req.params.id}
+            })
+            res.status(200).json(activity);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -36,10 +40,12 @@ class Activity_controller {
     async getAllActivities(req, res) {
         try {
             const kindOfActivity = req.query.kindOfActivity;
-            const activities = await db.query(
-                `SELECT * FROM activity where kindOfActivity = $1`, [kindOfActivity]
-            );
-            res.status(200).json(activities.rows);
+            const activities = await Activity.findAll({
+                where: {
+                    kindOfActivity
+                }
+            });
+            res.status(200).json(activities);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -49,7 +55,11 @@ class Activity_controller {
 
     async getAllActivitiesByUserId(req, res) {
         try {
-
+            const activities = await Activity.findAll({
+                where: {
+                    userId: req.user.id
+                }
+            })
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -59,9 +69,12 @@ class Activity_controller {
 
     async getOneActivityById(req, res) {
         try {
-            const activity_id = req.params.id;
-            const activity = await db.query(`SELECT title, author, content, date, kindOfActivity, person_id FROM activity where activity_id = ($1)`, [activity_id]);
-            res.status(200).json(activity.rows[0]);
+            const activity = await Activity.findOne({
+                where: {
+                    id: req.params.id
+                }
+            });
+            res.status(200).json(activity);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -71,8 +84,11 @@ class Activity_controller {
 
     async deleteActivity(req, res) {
         try {
-            const id = req.params.id;
-            await db.query(`DELETE FROM activity where activity_id = ($1)`, [id]);
+            await Activity.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
             res.status(201).json({
                 message: `Урок успішно видалено`
             });

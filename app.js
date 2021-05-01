@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(require('cors')());
 
-sequelize.sync()
+sequelize.sync({alter: true})
     .then(
         () => console.log('DataBase connection established successfully.')
     ).catch(
