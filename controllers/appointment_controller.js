@@ -1,6 +1,7 @@
 const db = require('../database/db');
 const appointmentService = require('./services/appointment_service');
 const reportService = require('./services/report_service');
+const User = require('../models/User');
 
 class Appointment_controller {
 
@@ -32,11 +33,11 @@ class Appointment_controller {
                   FROM sportKind
                   WHERE name = ($1)`,
                   [req.body.sportKind]);
-            const person_id = await db.query (`
-                  SELECT person_id
-                  FROM person
-                  WHERE email = ($1)`,
-                  [req.user.rows[0].email]);
+            const user = await User.findOne({
+                where: {
+                    email: req.user.email
+                }
+            });
 
             const startDate = new Date(req.body.start);
             const finishDate = new Date(req.body.finish);
@@ -91,7 +92,7 @@ class Appointment_controller {
                       req.body.direction,
                       req.body.status,
                       req.body.organiser,
-                      person_id.rows[0].person_id
+                      user.id
                   ]);
             const report = await reportService.saveReportToDB(req, appointment);
             console.log('report', report.rows[0]);
@@ -135,11 +136,13 @@ class Appointment_controller {
                   WHERE name = ($1)`,
                 [req.body.sportKind]);
 
-            const person_id = await db.query (`
-                  SELECT person_id
-                  FROM person
-                  WHERE email = ($1)`,
-                [req.user.rows[0].email]);
+            console.log(req.user)
+
+            const user = await User.findOne({
+                where: {
+                    email: req.user.email
+                }
+            })
 
             const startDate = new Date(req.body.start);
             const finishDate = new Date(req.body.finish);
@@ -194,7 +197,7 @@ class Appointment_controller {
                     req.body.direction,
                     req.body.status,
                     req.body.organiser,
-                    person_id.rows[0].person_id,
+                    user.id,
                     req.body.appointment_id
                 ]);
             res.status(201).json(appointment.rows[0]);

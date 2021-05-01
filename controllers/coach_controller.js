@@ -1,10 +1,18 @@
 const db = require('../database/db');
+const Сoach = require('../models/Coach')
 
 class Coach_controller {
 
     async createCoach(req, res) {
         try {
-
+            const coach = await Сoach.create({
+                name: req.body.name,
+                surname: req.body.surname,
+                fathername: req.body.fathername,
+                dateofbirth: new Date(req.body.dateofbirth)
+            });
+            console.log(coach.rows);
+            res.status(201).json(coach);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

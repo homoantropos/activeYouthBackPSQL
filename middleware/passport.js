@@ -1,7 +1,7 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const db = require('../database/db');
 const keys = require('../config/keys');
+const User = require('../models/User');
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -12,7 +12,11 @@ module.exports = passport => {
     passport.use(
         new JwtStrategy(options, async (payload, done) => {
             try{
-                const user = await db.query(`SELECT * FROM person where email = ($1)`, [payload.email]);
+                const user = await User.findOne({
+                    where: {
+                        email: payload.email
+                    }
+                });
                 if(user) {
                     done(null, user);
                 } else {

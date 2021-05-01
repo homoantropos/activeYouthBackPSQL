@@ -1,17 +1,19 @@
-const db = require('../database/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
+const User = require('../models/User');
 
 class User_controller {
-
     async registerUser(req, res) {
         try {
             const salt = await bcrypt.genSalt(10);
             let password = await bcrypt.hash(req.body.password, salt);
-            const person = await db.query(`INSERT INTO person (email, password, role) values ($1, $2, $3) RETURNING person_id, email, role`,
-                [req.body.email, password, req.body.role]);
-            res.status(201).json(person.rows[0]);
+            const user = await User.create({
+                    email: req.body.email,
+                    password,
+                    role: req.body.role
+                });
+            res.status(201).json(user);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -21,21 +23,26 @@ class User_controller {
 
     async login(req, res) {
         try {
-            const candidate = await db.query(`SELECT email, role, password, person_id FROM person where email = ($1) `, [req.body.email]);
-            if (!candidate.rows[0]) {
+            const candidate = await User.findOne({
+                where: {
+                    email: req.body.email
+                }
+            })
+            if (!candidate) {
                 res.status(404).json({
                     message: 'EMAIL_NOT_FOUND'
                 })
             } else {
-                const passwordCompare = await bcrypt.compare(req.body.password, candidate.rows[0].password);
+                const passwordCompare = await bcrypt.compare(req.body.password, candidate.password);
                 if (passwordCompare) {
                     const token = jwt.sign({
-                        email: candidate.rows[0].email,
-                        role: candidate.rows[0].role,
-                        person_id: candidate.rows[0].person_id
+                        email: candidate.email,
+                        role: candidate.role,
+                        userId: candidate.id
                     }, keys.jwt, {expiresIn: 60 * 60});
                     res.status(200).json({
-                        token: `Bearer ${token}`
+                        token: `Bearer ${token}`,
+                        userRole: candidate.role
                     });
                 } else {
                     res.status(401).json({
@@ -52,16 +59,20 @@ class User_controller {
 
         async updateUser(req, res) {
             try {
-                const person_id = req.params.id;
                 const salt = await bcrypt.genSalt(10);
                 let password = await bcrypt.hash(req.body.password, salt);
-                const person = await db.query(
-                    `UPDATE person set email = $1, password = $2, role = $3 where person_id = ($4) RETURNING email, role, person_id`,
-                    [req.body.email, password, req.body.role, person_id]
-                );
+                await User.update({
+                    email: req.body.email,
+                    password,
+                    role: req.body.role
+                    },
+                    {
+                    where: {
+                        id: req.params.id
+                    }
+                })
                 res.status(200).json({
-                    message: `Дані користувача успішно оновлено`,
-                    person
+                    message: `Дані користувача успішно оновлено`
                 });
             } catch (error) {
                 res.status(500).json({
@@ -72,8 +83,8 @@ class User_controller {
 
         async getAllUsers(req, res) {
             try {
-                const persons = await db.query(`SELECT person_id, email, role FROM person ORDER BY role`);
-                res.status(201).json(persons.rows);
+                const users = await User.findAll();
+                res.status(201).json(users);
             } catch (error) {
                 res.status(500).json({
                     message: error.message ? error.message : error
@@ -83,9 +94,12 @@ class User_controller {
 
         async getOneUserById(req, res) {
             try {
-                const id = req.params.id;
-                const person = await db.query(`SELECT person_id, email, role FROM person where person_id = ($1)`, [id]);
-                res.status(201).json(person.rows[0]);
+                const user = await User.findOne({
+                    where: {
+                        id: req.params.id
+                    }
+                });
+                res.status(201).json(user);
             } catch (error) {
                 res.status(500).json({
                     message: error.message ? error.message : error
@@ -95,8 +109,11 @@ class User_controller {
 
         async deleteUser(req, res) {
             try {
-                const id = req.params.id;
-                await db.query(`DELETE FROM person where person_id = ($1)`, [id]);
+                await User.destroy({
+                    where: {
+                        id: req.params.id
+                    }
+                });
                 res.status(201).json({
                     message: `Користувача успішно видалено`
                 });

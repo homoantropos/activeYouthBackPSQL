@@ -1,4 +1,4 @@
-create TABLE person(
+create TABLE user(
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     role VARCHAR(100) NOT NULL,
@@ -17,7 +17,7 @@ create TABLE activity(
     person_id INT NOT NULL,
     CONSTRAINT fk_person
         FOREIGN KEY (person_id)
-            REFERENCES person(person_id)
+            REFERENCES user(person_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
@@ -128,7 +128,7 @@ create TABLE appointment (
             ON UPDATE NO ACTION,
     CONSTRAINT fk_person
         FOREIGN KEY (person_id)
-        REFERENCES person(person_id)
+        REFERENCES user(person_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
