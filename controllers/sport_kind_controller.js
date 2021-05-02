@@ -1,12 +1,14 @@
-const db = require('../database/db');
+const Sport_kind = require('../models/Sport_kind');
 
 class Sports_kind_controller {
 
     async createSportKind(req, res) {
         try {
-            const sportKind = await db.query(`INSERT INTO sportKind (name) values ($1) RETURNING sportkind_id, name`,
-                [req.body.name]);
-            res.status(201).json(sportKind.rows[0]);
+            const sport_kind = await Sport_kind.create({
+                sport_kind: req.body.sport_kind,
+                code: req.body.code
+            });
+            res.status(201).json(sport_kind);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -16,10 +18,13 @@ class Sports_kind_controller {
 
     async updateSportKind(req, res) {
         try {
-            const sportKind = await db.query(
-                `UPDATE sportKind set name = $1 where sportkind_id = $2 RETURNING name, sportkind_id`,
-                [req.body.name, req.body.sportkind_id]);
-            res.stat(200).json(sportKind.rows[0]);
+            const sport_kind = await Sport_kind.update({
+                sport_kind: req.body.sport_kind,
+                code: req.body.code
+            }, {
+                where: {id: req.body.id}
+            });
+            res.stat(200).json(sport_kind);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -29,8 +34,12 @@ class Sports_kind_controller {
 
     async getAllSportKinds(req, res) {
         try {
-            const sportKind = await db.query(`SELECT sportkind_id, name FROM sportKind ORDER BY name`);
-            res.status(200).json(sportKind.rows);
+            const sport_kinds = await Sport_kind.findAll({
+                order: [
+                    ['code', 'ASC']
+                ]
+            });
+            res.status(200).json(sport_kinds);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -40,9 +49,10 @@ class Sports_kind_controller {
 
     async getOneSportKindById(req, res) {
         try {
-            const id = req.params.id;
-            const sportKind = await db.query(`SELECT sportkind_id, name FROM sportKind where sportkind_id = ($1)`, [id]);
-            res.status(200).json(sportKind.rows[0]);
+            const sport_kind = await Sport_kind.findOne({
+                where: {id: req.params.id}
+            });
+            res.status(200).json(sport_kind);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -52,8 +62,9 @@ class Sports_kind_controller {
 
     async deleteSportKind(req, res) {
         try {
-            const id = req.params.id;
-            await db.query(`DELETE FROM sportKind where sportkind_id = ($1)`, [id]);
+            await Sport_kind.destroy({
+                where: {id: req.params.id}
+            });
             res.status(200).json({
                 message: `Вид спорту успішно видалено`
             });

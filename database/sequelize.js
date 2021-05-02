@@ -8,7 +8,8 @@ const sequelize = new Sequelize(keys.dbName, keys.dbUser, keys.dbPwd, {
     define: {
         freezeTableName: true,
         timestamps: false
-    }
+    },
+    logging: false
 })
 
 module.exports= sequelize

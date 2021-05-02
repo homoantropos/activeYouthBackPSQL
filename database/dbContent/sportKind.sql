@@ -1,4 +1,4 @@
-INSERT INTO sportkind(name, code)
+INSERT INTO sport_kind(sport_kind, code)
     VALUES
         ('Бадмінтон ', 'І.001.'),
         ('Баскетбол ', 'І.002.'),
