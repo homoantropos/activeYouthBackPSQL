@@ -9,10 +9,14 @@ const Sport_kind = sequelize.define(
             allowNull: false,
             unique: 'sport_kind'
         },
-        code: {
+        program: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: 'sport_kind'
+        },
+        registration_number: {
+            type: Sequelize.INTEGER,
+            allowNull: false
         }
     },
     {

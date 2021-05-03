@@ -131,10 +131,10 @@ class Appointment_controller {
                 [req.body.place.sportHall]);
 
             const sportkind_id = await db.query(`
-                  SELECT sportkind_id
-                  FROM sportKind
+                  SELECT id
+                  FROM sport_kind
                   WHERE name = ($1)`,
-                [req.body.sportKind]);
+                [req.body.sport_kind]);
 
             console.log(req.user)
 

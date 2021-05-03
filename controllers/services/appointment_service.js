@@ -15,7 +15,7 @@ class Appointment_service {
                 town_name,
                 sportHall_name,
                 organizationsParticipants,
-                name,
+                sport_kind,
                 kpkv,
                 haracter,
                 participants,
@@ -35,8 +35,8 @@ class Appointment_service {
             ON appointment.town_id = town.town_id
             INNER JOIN sportHall
             ON appointment.sportHall_id = sportHall.sporthall_id
-            INNER JOIN sportkind
-            ON appointment.sportkind_id = sportkind.sportkind_id
+            INNER JOIN sport_kind
+            ON appointment.sportkind_id = sport_kind.id
             ORDER BY startDate
             `)
     )

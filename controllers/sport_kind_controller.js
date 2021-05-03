@@ -6,7 +6,8 @@ class Sports_kind_controller {
         try {
             const sport_kind = await Sport_kind.create({
                 sport_kind: req.body.sport_kind,
-                code: req.body.code
+                program: req.body.program,
+                registration_number: req.body.registration_number
             });
             res.status(201).json(sport_kind);
         } catch (error) {
@@ -20,7 +21,8 @@ class Sports_kind_controller {
         try {
             const sport_kind = await Sport_kind.update({
                 sport_kind: req.body.sport_kind,
-                code: req.body.code
+                program: req.body.program,
+                registration_number: req.body.registration_number
             }, {
                 where: {id: req.body.id}
             });
@@ -36,7 +38,7 @@ class Sports_kind_controller {
         try {
             const sport_kinds = await Sport_kind.findAll({
                 order: [
-                    ['code', 'ASC']
+                    ['sport_kind', 'ASC']
                 ]
             });
             res.status(200).json(sport_kinds);
