@@ -22,13 +22,6 @@ create TABLE activity(
             ON UPDATE NO ACTION
 );
 
-create TABLE sportKind (
-    name VARCHAR NOT NULL,
-    code VARCHAR UNIQUE,
-    sportkind_id INT GENERATED ALWAYS AS IDENTITY,
-    PRIMARY KEY (sportkind_id)
-);
-
 create TABLE country (
     country_name VARCHAR NOT NULL UNIQUE,
     country_id INT GENERATED ALWAYS AS IDENTITY,

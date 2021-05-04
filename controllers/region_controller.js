@@ -1,36 +1,23 @@
 const db = require('../database/db');
+const Region = require('../models/Region');
+const Country = require('../models/Country');
 
 class Region_controller {
 
     async createRegion(req, res) {
         try {
-            console.log(req.body);
-            const country_id = await db.query(`
-                                SELECT
-                                    country_id
-                                FROM
-                                    country
-                                WHERE
-                                    country.country_name = ($1)`, [req.body.country]);
-            const region = await db.query(`
-                                INSERT INTO region
-                                    (region_name,
-                                     region_group,
-                                     country_id)
-                                VALUES
-                                    ($1,
-                                     $2,
-                                     $3)
-                                RETURNING
-                                    region_id,
-                                    region_name,
-                                    region_group,
-                                    country_id`,
-                                [req.body.region_name,
-                                 req.body.region_group,
-                                 country_id.rows[0].country_id
-                                ]);
-            res.status(201).json(region.rows[0]);
+            const country = await Country.findOne({
+                where: {
+                    country_name: req.body.country
+                }
+            });
+            const region = await country.createRegion({
+                region_name: req.body.region_name,
+                region_group: req.body.region_group,
+                countryId: country.id
+            });
+            console.log(region);
+            res.status(201).json(region);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -40,23 +27,15 @@ class Region_controller {
 
     async updateRegion(req, res) {
         try {
-            const region = await db.query(`
-                                UPDATE
-                                    region
-                                SET
-                                    region_name = $1,
-                                    region_group = $2
-                                WHERE
-                                    region_id = $3
-                                RETURNING
-                                    region_name,
-                                    region_group,
-                                    region_id`,
-                                [req.body.region_name,
-                                 req.body.region_group,
-                                 req.body.region_id]);
-            res.status(200).json(region.rows[0]);
-            console.log(region.rows[0]);
+            const region = Region.update({
+                region_name: req.body.region_name,
+                region_group: req.body.region_group,
+                countryId: req.body.countryId
+            }, {
+                where: {id: req.body.id}
+            })
+            res.status(200).json(region);
+            console.log(region);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -66,41 +45,24 @@ class Region_controller {
 
     async getAllRegions(req, res) {
         try {
-            const regions = await db.query(`
-                                SELECT
-                                    region_id,
-                                    region_name,
-                                    region_group,
-                                    country_name
-                                FROM
-                                    region
-                                INNER JOIN
-                                    country
-                                ON region.country_id = country.country_id
-                                ORDER BY
-                                    region_name`);
-            res.status(200).json(regions.rows);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
-    async getRegionsByGroup(req, res) {
-        try {
-            const group = req.params.region_group;
-            const regions = await db.query(`
-                                SELECT
-                                    region_id,
-                                    region_name,
-                                    region_group
-                                FROM
-                                    region
-                                WHERE
-                                    region_group = ($1)`,
-                                [group]);
-            res.status(200).json(regions.rows[0]);
+            if (req.query.regionGroup) {
+                const regions = await Region.findAll({
+                    where: {
+                        region_group: req.query.regionGroup
+                    },
+                    order: [
+                        ['region_name', 'ASC']
+                    ]
+                });
+                res.status(200).json(regions);
+            } else {
+                const regions = await Region.findAll({
+                    order: [
+                        ['region_name', 'ASC']
+                    ]
+                });
+                res.status(200).json(regions);
+            }
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -110,18 +72,10 @@ class Region_controller {
 
     async getOneRegionById(req, res) {
         try {
-            const id = req.params.id;
-            const regions = await db.query(`
-                                SELECT
-                                    region_id,
-                                    region_name,
-                                    region_group
-                                FROM
-                                    region
-                                WHERE
-                                    region_id = ($1)`,
-                                [id]);
-            res.status(200).json(regions.rows[0]);
+            const region = await Region.findOne({
+                where: {id: req.params.id}
+            })
+            res.status(200).json(region);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -131,16 +85,13 @@ class Region_controller {
 
     async deleteRegion(req, res) {
         try {
-            const id = req.params.id;
-            await db.query(`
-                DELETE
-                FROM
-                    region
-                WHERE
-                    region_id = ($1)`,
-                [id]);
+            await Region.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
             res.status(200).json({
-                message: `Назву регіону успішно видалено з бази даних.`
+                message: `Регіон успішно видалено з бази даних.`
             });
         } catch (error) {
             res.status(500).json({
