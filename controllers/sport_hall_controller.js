@@ -1,15 +1,23 @@
-const db = require('../database/db');
+const Country = require('../models/Country');
+const Region = require('../models/Region');
+const Town = require('../models/Town');
+const Sport_hall = require('../models/Sport_hall');
 
 class Sport_hall_controller {
 
     async createSportHall(req, res) {
         try {
-            const town = await db.query(`SELECT town_id FROM town WHERE town_name = ($1)`, [req.body.town_name]);
-            const sportHall = await db.query(`INSERT INTO sportHall (sportHall_name, address, town_id)
-                                                VALUES ($1, $2, $3)
-                                                RETURNING sportHall_id, sportHall_name, address, town_id`,
-                                                [req.body.sportHall_name, req.body.address, town.rows[0].town_id]);
-            res.status(201).json(sportHall.rows[0]);
+            const town = await Town.findOne({
+                where: {
+                    town_name: req.body.town.town_name
+                }
+            });
+            const sportHall = await Sport_hall.create({
+                sport_hall_name: req.body.sport_hall_name,
+                address: req.body.address,
+                townId: town.id
+            })
+            res.status(201).json(sportHall);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -19,27 +27,19 @@ class Sport_hall_controller {
 
     async updateSportHall(req, res) {
         try {
-            const town_id = await db.query(`SELECT town_id FROM town WHERE town_name=($1)`, [req.body.town_name])
-            const sportHall = await db.query(`
-                                    UPDATE
-                                        sportHall
-                                    SET
-                                        sportHall_name = $1,
-                                        address = $2,
-                                        town_id = $3
-                                    WHERE
-                                        sportHall_id = $4
-                                    RETURNING
-                                        sportHall_id,
-                                        sportHall_name,
-                                        address,
-                                        town_id`,
-                                    [req.body.sportHall_name,
-                                     req.body.address,
-                                     town_id.rows[0].town_id,
-                                     req.body.sportHall_id
-                                    ]);
-            res.status(200).json(sportHall.rows[0]);
+            const town = await Town.findOne({
+                where: {
+                    town_name: req.body.town.town_name
+                }
+            });
+            const sportHall = await Sport_hall.update({
+                sport_hall_name: req.body.sport_hall_name,
+                address: req.body.address,
+                townId: town.id
+            }, {
+                where: {id: req.body.id}
+            })
+            res.status(201).json(sportHall);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -49,22 +49,10 @@ class Sport_hall_controller {
 
     async getAllSportHalls(req, res) {
         try {
-            const sportHalls = await db.query(`
-                SELECT
-                    sportHall_name,
-                    address,
-                    sportHall_id,
-                    town_name
-                FROM
-                    sportHall
-                INNER JOIN
-                    town
-                ON
-                    sportHall.town_id = town.town_id
-                ORDER BY
-                     sportHall_name
-                `);
-            res.status(200).json(sportHalls.rows);
+            const sportHalls = await Sport_hall.findAll({
+                include: [{model: Town, required: true}]
+            });
+            res.status(200).json(sportHalls);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -74,22 +62,14 @@ class Sport_hall_controller {
 
     async getOneSportHallById(req, res) {
         try {
-            const sportHall = await db.query(`
-                SELECT
-                    sportHall_name,
-                    address,
-                    sportHall_id,
-                    town_name
-                FROM
-                    sportHall
-                INNER JOIN
-                    town
-                ON sportHall.town_id = town.town_id
-                WHERE
-                    sportHall_id = ($1)
-            `,
-            [req.params.id]);
-            res.status(200).json(sportHall.rows[0]);
+            const sportHall = await Sport_hall.findOne({
+                where: {id: req.params.id},
+                include: [{model: Town, required: true, include: [
+                        {model: Country, required: true},
+                        {model: Region, required: true}
+                    ]}]
+            });
+            res.status(200).json(sportHall);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -99,13 +79,9 @@ class Sport_hall_controller {
 
     async deleteSportHall(req, res) {
         try {
-            await db.query(`
-                DELETE
-                FROM
-                    sportHall
-                WHERE
-                    sportHall_id = ($1)
-            `, [req.params.id]);
+            await Sport_hall.destroy({
+                where: {id: req.params.id}
+            })
             res.status(200).json({
                 message: 'Спортивна споруда успішно видалена з абзи даних'
             })

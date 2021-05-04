@@ -1,44 +1,21 @@
-const db = require('../database/db');
+const Town = require('../models/Town');
+const Region = require('../models/Region');
+const Country = require('../models/Country');
 
 class Town_controller {
 
     async createTown(req, res) {
         try {
-            const country = await db.query(`
-                                SELECT
-                                    country_id
-                                FROM
-                                    country
-                                WHERE
-                                    country.country_name = ($1)`,
-                                [req.body.country]);
-            const region = await db.query(`
-                                SELECT
-                                    region_id
-                                FROM
-                                    region
-                                WHERE
-                                    region_name = ($1)`,
-                                [req.body.region]);
-            const town = await db.query(`
-                                INSERT INTO
-                                    town
-                                        (town_name,
-                                         country_id,
-                                         region_id)
-                                VALUES
-                                    ($1,
-                                     $2,
-                                     $3)
-                                RETURNING
-                                    town_id,
-                                    town_name,
-                                    country_id,
-                                    region_id`,
-                                [req.body.town_name,
-                                 country.rows[0].country_id,
-                                 region.rows[0].region_id]);
-            res.status(201).json(town.rows[0]);
+            const region = await Region.findOne({
+                    where: {region_name: req.body.region.region_name}
+                }
+            );
+            const town = await region.createTown({
+                town_name: req.body.town_name,
+                regionId: region.id,
+                countryId: region.countryId
+            });
+            res.status(201).json(town);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -48,21 +25,18 @@ class Town_controller {
 
     async updateTown(req, res) {
         try {
-            const town = await db.query(`
-                                UPDATE
-                                    town
-                                SET
-                                    town_name = $1
-                                WHERE
-                                    town_id = $2
-                                RETURNING
-                                    town_id,
-                                    town_name,
-                                    country_id,
-                                    region_id`,
-                                [req.body.town_name,
-                                 req.body.town_id]);
-            res.status(200).json(town.rows[0]);
+            const region = await Region.findOne({
+                    where: {region_name: req.body.region.region_name}
+                }
+            );
+            const town = await Town.update({
+                town_name: req.body.town_name,
+                regionId: region.id,
+                countryId: region.countryId
+            }, {
+                where: {id: req.body.id}
+            });
+            res.status(201).json(town);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -72,78 +46,19 @@ class Town_controller {
 
     async getAllTowns(req, res) {
         try {
-            const towns = await db.query(`
-                            SELECT
-                                town_id,
-                                town_name,
-                                country_name,
-                                region_name
-                            FROM
-                                town
-                            INNER JOIN country
-                                ON town.country_id = country.country_id
-                            INNER JOIN region
-                                ON town.region_id = region.region_id    
-                            ORDER BY town_name`);
-            res.status(200).json(towns.rows);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
-    async getTownsByCountry(req, res) {
-        try {
-            const country_id = await db.query(`
-                            SELECT
-                                country_id
-                            FROM
-                                country
-                            WHERE
-                                country_name = ($1)`,
-                            [req.body.country_name]);
-            const towns = await db.query(`
-                            SELECT
-                                town_id,
-                                town_name,
-                                country_id,
-                                region_id
-                            FROM
-                                town
-                            WHERE
-                                town.country_id = ($1)`,
-                            [country_id]);
-            res.status(200).json(towns.rows[0]);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
-    async getTownsByRegion(req, res) {
-        try {
-            const region_id = await db.query(`
-                            SELECT
-                                region_id
-                            FROM
-                                region
-                            WHERE
-                                region_name = ($1)`,
-                            [req.body.region]);
-            const towns = await db.query(`
-                            SELECT
-                                town_id,
-                                town_name,
-                                country_id,
-                                region_id
-                            FROM
-                                town
-                            WHERE
-                                town.region_id = ($1)`,
-                            [region_id]);
-            res.status(200).json(towns.rows[0]);
+            const towns = await Town.findAll({
+                include: [Country, Region],
+                order: [
+                    ['town_name', 'ASC']
+                ]
+            });
+            if (req.query.countryName) {
+                towns.filter(town => town.country.country_name === countryName);
+            }
+            if (req.query.regionName) {
+                towns.filter(town => town.region.region_name === regionName);
+            }
+            res.status(200).json(towns);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -153,20 +68,13 @@ class Town_controller {
 
     async getOneTownById(req, res) {
         try {
-            const town_id = req.params.id;
-            const town = await db.query(`
-                            SELECT
-                                town_id,
-                                town_name,
-                                country_name,
-                                region_name
-                            FROM town
-                            INNER JOIN country
-                                ON town.country_id = country.country_id
-                            INNER JOIN region
-                                ON town.region_id = region.region_id
-                            WHERE town_id = ($1)`, [town_id]);
-            res.status(200).json(town.rows[0]);
+            const town = await Town.findOne({
+                where: {id: req.params.id},
+                include: [
+                    {model: Country, required: true},
+                    {model: Region, required: true}]
+            });
+            res.status(200).json(town);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -176,13 +84,9 @@ class Town_controller {
 
     async deleteTown(req, res) {
         try {
-            const id = req.params.id;
-            await db.query(`
-                            DELETE FROM
-                                town
-                            WHERE
-                                town_id = ($1)`,
-                            [id]);
+            await Town.destroy({
+                where: {id: req.params.id}
+            });
             res.status(200).json({
                 message: `Назву міста успішно видалено з бази даних.`
             });

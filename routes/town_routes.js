@@ -7,8 +7,6 @@ router.post('/', passport.authenticate('jwt', {session: false}), controller.crea
 router.patch('/', passport.authenticate('jwt', {session: false}), controller.updateTown);
 router.get('/', controller.getAllTowns);
 router.get('/:id', controller.getOneTownById);
-router.get('/:country', controller.getTownsByCountry);
-router.get('/:region', controller.getTownsByRegion);
 router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.deleteTown);
 
 module.exports = router

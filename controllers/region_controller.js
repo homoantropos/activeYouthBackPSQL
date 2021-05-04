@@ -1,4 +1,3 @@
-const db = require('../database/db');
 const Region = require('../models/Region');
 const Country = require('../models/Country');
 
