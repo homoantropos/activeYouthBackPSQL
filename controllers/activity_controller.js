@@ -29,7 +29,9 @@ class Activity_controller {
             }, {
                 where: {id: req.params.id}
             })
-            res.status(200).json(activity);
+            res.status(200).json({
+                message: 'Зміни успішно збережені.'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -59,7 +61,8 @@ class Activity_controller {
                 where: {
                     userId: req.user.id
                 }
-            })
+            });
+            res.status(200).json(activities);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

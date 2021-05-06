@@ -17,13 +17,14 @@ class Country_controller {
 
     async updateCountry(req, res) {
         try {
-            console.log(req.body);
             const country = await Country.update({
                 country_name: req.body.country_name
             }, {
                 where: {id: req.body.id}
             });
-            res.status(200).json(country);
+            res.status(200).json({
+                message: 'Зміни успішно збережені.'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

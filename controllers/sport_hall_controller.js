@@ -39,7 +39,9 @@ class Sport_hall_controller {
             }, {
                 where: {id: req.body.id}
             })
-            res.status(201).json(sportHall);
+            res.status(201).json({
+                message: 'Зміни успішно збережені.'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

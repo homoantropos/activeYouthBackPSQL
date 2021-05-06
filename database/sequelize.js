@@ -9,7 +9,7 @@ const sequelize = new Sequelize(keys.dbName, keys.dbUser, keys.dbPwd, {
         freezeTableName: true,
         timestamps: false
     },
-    // logging: false
+    logging: false
 })
 
 module.exports= sequelize

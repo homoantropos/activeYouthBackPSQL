@@ -36,7 +36,9 @@ class Town_controller {
             }, {
                 where: {id: req.body.id}
             });
-            res.status(201).json(town);
+            res.status(201).json({
+                message: 'Зміни успішно збережені.'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -47,7 +49,16 @@ class Town_controller {
     async getAllTowns(req, res) {
         try {
             const towns = await Town.findAll({
-                include: [Country, Region],
+                include: [
+                    {
+                        model: Country,
+                        attributes: {exclude: ['id']}
+                    }, {
+                        model: Region,
+                        attributes: {
+                            exclude: ['countryId', 'id']
+                        }
+                    }],
                 order: [
                     ['town_name', 'ASC']
                 ]

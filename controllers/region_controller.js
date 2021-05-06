@@ -16,7 +16,6 @@ class Region_controller {
                 region_group: req.body.region_group,
                 countryId: country.id
             });
-            console.log(region);
             res.status(201).json(region);
         } catch (error) {
             res.status(500).json({
@@ -27,15 +26,16 @@ class Region_controller {
 
     async updateRegion(req, res) {
         try {
-            const region = Region.update({
+            await Region.update({
                 region_name: req.body.region_name,
                 region_group: req.body.region_group,
                 countryId: req.body.countryId
             }, {
                 where: {id: req.body.id}
             })
-            res.status(200).json(region);
-            console.log(region);
+            res.status(200).json({
+                message: "Зміни успішно збережені."
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

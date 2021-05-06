@@ -26,7 +26,9 @@ class Sports_kind_controller {
             }, {
                 where: {id: req.body.id}
             });
-            res.stat(200).json(sport_kind);
+            res.status(200).json({
+                message: 'Зміни успішно збережені.'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
