@@ -1,4 +1,4 @@
-create TABLE user(
+create TABLE person(
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     role VARCHAR(100) NOT NULL,
@@ -17,9 +17,16 @@ create TABLE activity(
     person_id INT NOT NULL,
     CONSTRAINT fk_person
         FOREIGN KEY (person_id)
-            REFERENCES user(person_id)
+            REFERENCES person(person_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
+);
+
+create TABLE sportKind (
+    name VARCHAR NOT NULL,
+    code VARCHAR UNIQUE,
+    sportkind_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (sportkind_id)
 );
 
 create TABLE country (
@@ -121,7 +128,7 @@ create TABLE appointment (
             ON UPDATE NO ACTION,
     CONSTRAINT fk_person
         FOREIGN KEY (person_id)
-        REFERENCES user(person_id)
+        REFERENCES person(person_id)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
