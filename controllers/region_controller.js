@@ -1,3 +1,4 @@
+const sequelize = require('../database/sequelize');
 const Region = require('../models/Region');
 const Country = require('../models/Country');
 
@@ -58,7 +59,11 @@ class Region_controller {
                 const regions = await Region.findAll({
                     order: [
                         ['region_name', 'ASC']
-                    ]
+                    ],
+                    include: {
+                        model: Country,
+                        attributes: {exclude: ['id']}
+                    }
                 });
                 res.status(200).json(regions);
             }
