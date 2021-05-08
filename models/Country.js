@@ -13,4 +13,5 @@ const Country = sequelize.define(
         timestamps: false
     });
 
+
 module.exports = Country

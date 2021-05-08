@@ -24,7 +24,7 @@ const Sport_hall = sequelize.define(
 Town.hasMany(Sport_hall);
 Sport_hall.belongsTo(Town, {
     onDelete: 'CASCADE',
-    onUpdate: 'NO ACTION'
+    onUpdate: 'CASCADE'
 });
 
 module.exports = Sport_hall

@@ -30,7 +30,7 @@ const Activity = sequelize.define('activity', {
 User.hasMany(Activity);
 Activity.belongsTo(User, {
     onDelete: 'CASCADE',
-    onUpdate: 'NO ACTION'
+    onUpdate: 'CASCADE'
 });
 
 module.exports = Activity

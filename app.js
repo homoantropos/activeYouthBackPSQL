@@ -20,6 +20,7 @@ const sportHallRoutes = require('./routes/sport_hall_routes');
 const sportKindsRoutes = require('./routes/sport_kind_routes');
 const townRoutes = require('./routes/town_routes');
 const userRoutes = require('./routes/user_routes');
+const appointmentPlacesRoutes = require('./routes/appointment_place_routes');
 
 app.use(passport.initialize());
 require('./middleware/passport')(passport);
@@ -56,5 +57,6 @@ app.use('/api/country', countryRoutes);
 app.use('/api/region', regionRoutes);
 app.use('/api/town', townRoutes);
 app.use('/api/sportHall', sportHallRoutes);
+app.use('/api/place', appointmentPlacesRoutes);
 
 module.exports = app

@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
-const Country = require('../models/Country');
 const Region = require('../models/Region');
 
 const Town = sequelize.define(
@@ -16,12 +15,7 @@ const Town = sequelize.define(
         timestamps: false
     });
 
-Country.hasMany(Town);
 Region.hasMany(Town);
-Town.belongsTo(Country, {
-    onDelete: 'CASCADE',
-    onUpdate: 'NO ACTION'
-});
 Town.belongsTo(Region, {
     onDelete: 'CASCADE',
     onUpdate: 'NO ACTION'

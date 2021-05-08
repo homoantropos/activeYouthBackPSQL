@@ -12,8 +12,7 @@ class Town_controller {
             );
             const town = await region.createTown({
                 town_name: req.body.town_name,
-                regionId: region.id,
-                countryId: region.countryId
+                regionId: region.id
             });
             res.status(201).json(town);
         } catch (error) {
@@ -29,10 +28,9 @@ class Town_controller {
                     where: {region_name: req.body.region.region_name}
                 }
             );
-            const town = await Town.update({
+            await Town.update({
                 town_name: req.body.town_name,
-                regionId: region.id,
-                countryId: region.countryId
+                regionId: region.id
             }, {
                 where: {id: req.body.id}
             });
@@ -51,21 +49,22 @@ class Town_controller {
             const towns = await Town.findAll({
                 include: [
                     {
-                        model: Country,
-                        attributes: {exclude: ['id']}
-                    }, {
                         model: Region,
                         attributes: {
                             exclude: ['countryId', 'id']
+                        },
+                        include: {
+                            model: Country,
+                            attributes: {
+                                exclude: ['id']
+                            }
                         }
                     }],
+                attributes: {exclude: ['regionId']},
                 order: [
                     ['town_name', 'ASC']
                 ]
             });
-            if (req.query.countryName) {
-                towns.filter(town => town.country.country_name === countryName);
-            }
             if (req.query.regionName) {
                 towns.filter(town => town.region.region_name === regionName);
             }
@@ -80,11 +79,22 @@ class Town_controller {
     async getOneTownById(req, res) {
         try {
             const town = await Town.findOne({
-                where: {id: req.params.id},
-                include: [
-                    {model: Country, required: true},
-                    {model: Region, required: true}]
-            });
+                    where: {id: req.params.id},
+                    include: [
+                        {
+                            model: Region,
+                            attributes: {
+                                exclude: ['countryId', 'id']
+                            },
+                            include: {
+                                model: Country,
+                                attributes: {
+                                    exclude: ['id']
+                                }
+                            }
+                        }]
+                }
+            );
             res.status(200).json(town);
         } catch (error) {
             res.status(500).json({

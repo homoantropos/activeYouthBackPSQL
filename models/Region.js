@@ -20,7 +20,10 @@ const Region = sequelize.define(
         timestamps: false
     });
 
-Country.hasMany(Region);
+Country.hasMany(Region, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
 Region.belongsTo(Country);
 
 module.exports = Region
