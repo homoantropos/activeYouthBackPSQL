@@ -1,5 +1,4 @@
 const Appointment_place = require('../models/Appointment_place');
-const Country = require('../models/Country');
 const Town = require('../models/Town');
 const Region = require('../models/Region');
 
@@ -77,23 +76,7 @@ class Appointment_place_controller {
 
     async getAllPlaces(req, res) {
         try {
-            const appointment_places = await Appointment_place.findAll({
-                include: [
-                    {
-                        model: Country,
-                        attributes: {exclude: ['id']}
-                    },
-                    {
-                        model: Region,
-                        attributes: {exclude: ['countryId', 'id']}
-                    },
-                    {
-                        model: Town,
-                        attributes: {exclude: ['regionId', 'id']}
-                    },
-                ],
-                attributes: {exclude: ['countryId', 'regionId', 'townId']}
-            });
+            const appointment_places = await Appointment_place.scope('appointmentPlace').findAll();
             res.status(200).json(appointment_places);
         } catch (error) {
             res.status(500).json({
@@ -104,24 +87,8 @@ class Appointment_place_controller {
 
     async getOneAppointmentPlaceById(req, res) {
         try {
-            const appointment_place = await Appointment_place.findOne({
-                include: [
-                    {
-                        model: Country,
-                        attributes: {exclude: ['id']}
-                    },
-                    {
-                        model: Region,
-                        attributes: {exclude: ['countryId', 'id']}
-                    },
-                    {
-                        model: Town,
-                        attributes: {exclude: ['regionId', 'id']}
-                    },
-                ],
-                attributes: {exclude: ['countryId', 'regionId', 'townId']},
-                where: {id: req.params.id}
-            });
+            const appointment_place = await Appointment_place.scope('appointmentPlace')
+                .findOne({where: {id: req.params.id}});
             res.status(200).json(appointment_place);
         } catch (error) {
             res.status(500).json({

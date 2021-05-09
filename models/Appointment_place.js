@@ -57,5 +57,24 @@ Appointment_place.belongsTo(Town, {
     onUpdate: 'CASCADE'
 });
 
+Appointment_place.addScope(
+    'appointmentPlace', {
+        attributes: {exclude: ['countryId', 'regionId', 'townId', 'appointmentId']},
+        include: [
+            {
+                model: Country,
+                attributes: {exclude: ['id']}
+            },
+            {
+                model: Region,
+                attributes: {exclude: ['id']}
+            },
+            {
+                model: Town,
+                attributes: {exclude: ['id']}
+            }
+        ]
+    }
+)
 
 module.exports = Appointment_place
