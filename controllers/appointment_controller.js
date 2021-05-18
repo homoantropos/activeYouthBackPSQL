@@ -3,6 +3,7 @@ const Appointment = require('../models/Appointment');
 const Appointment_place = require('../models/Appointment_place');
 const Sport_kind = require('../models/Sport_kind');
 const User = require('../models/User');
+const Report = require('../models/Report');
 
 class Appointment_controller {
 
@@ -37,7 +38,29 @@ class Appointment_controller {
                 sportKindId: sport_kind.id,
                 userId: user.id
             });
-            res.status(201).json(appointment);
+
+            const total_plan = req.body.members.countries +
+                req.body.members.regions +
+                req.body.members.educationEntity +
+                req.body.members.sportsmen +
+                req.body.members.coaches +
+                req.body.members.referees +
+                req.body.members.others;
+
+            const report = await appointment.createReport({
+                countries_plan: req.body.members.countries,
+                regions_plan: req.body.members.regions,
+                educationEntity_plan: req.body.members.educationEntity,
+                sportsmen_plan: req.body.members.sportsmen,
+                coaches_plan: req.body.members.coaches,
+                referees_plan: req.body.members.referees,
+                others_plan: req.body.members.others,
+                total_plan,
+                person_per_day_plan: `${total_plan*appointment.duration}`
+            });
+
+            console.log(report);
+            res.status(201).json({appointment, report});
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
