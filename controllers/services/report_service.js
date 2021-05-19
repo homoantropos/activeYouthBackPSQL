@@ -98,9 +98,6 @@ class ReportService {
 
     total_counter(req) {
         return (
-            Number(req.body.members.countries) +
-            Number(req.body.members.regions) +
-            Number(req.body.members.educationEntity) +
             Number(req.body.members.sportsmen) +
             Number(req.body.members.coaches) +
             Number(req.body.members.referees) +
@@ -110,9 +107,6 @@ class ReportService {
 
     total_plan_counter(req) {
         return (
-            req.body.countries_plan +
-            req.body.regions_plan +
-            req.body.educationEntity_plan +
             req.body.sportsmen_plan +
             req.body.coaches_plan +
             req.body.referees_plan +
@@ -122,9 +116,6 @@ class ReportService {
 
     total_fact_counter(req) {
         return (
-            req.body.countries_fact +
-            req.body.regions_fact +
-            req.body.educationEntity_fact +
             req.body.sportsmen_fact +
             req.body.coaches_fact +
             req.body.referees_fact +

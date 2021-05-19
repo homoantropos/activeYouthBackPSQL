@@ -4,6 +4,7 @@ const Appointment_place = require('../models/Appointment_place');
 const Sport_kind = require('../models/Sport_kind');
 const User = require('../models/User');
 const Report = require('../models/Report');
+const reportServise = require('./services/report_service');
 
 class Appointment_controller {
 
@@ -39,13 +40,9 @@ class Appointment_controller {
                 userId: user.id
             });
 
-            const total_plan = req.body.members.countries +
-                req.body.members.regions +
-                req.body.members.educationEntity +
-                req.body.members.sportsmen +
-                req.body.members.coaches +
-                req.body.members.referees +
-                req.body.members.others;
+            const total_plan = reportServise.total_counter(req);
+            console.log(total_plan);
+            const person_per_day_plan = total_plan * appointment.duration;
 
             const report = await appointment.createReport({
                 countries_plan: req.body.members.countries,
@@ -56,7 +53,7 @@ class Appointment_controller {
                 referees_plan: req.body.members.referees,
                 others_plan: req.body.members.others,
                 total_plan,
-                person_per_day_plan: `${total_plan*appointment.duration}`
+                person_per_day_plan
             });
 
             console.log(report);
@@ -122,15 +119,9 @@ class Appointment_controller {
 
     async getCalendar(req, res) {
         try {
-            const calendar = await db.query(`
-                SELECT * FROM appointment
-                NATURAL JOIN report
-                NATURAL JOIN country
-                NATURAL JOIN region
-                NATURAL JOIN town
-                NATURAL JOIN sportKind;
-            `);
-            res.status(200).json(calendar.rows);
+            const calendar = await Report.scope('fullReport').findAll();
+            res.status(200).json(calendar);
+            console.log(calendar);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

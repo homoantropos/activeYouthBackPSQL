@@ -6,6 +6,7 @@ const AppointmentPlace = require('./Appointment_place');
 const Country = require('../models/Country');
 const Region = require('../models/Region');
 const Town = require('../models/Town');
+const Sport_kind = require('../models/Sport_kind');
 
 const Report = sequelize.define(
     'report',
@@ -92,8 +93,12 @@ Report.addScope(
         include: [
             {
                 model: Appointment,
-                attributes: {exclude: []},
+                attributes: {exclude: ['id', 'appointmentPlaceId', 'sportKindId', 'userId']},
                 include: [
+                    {
+                        model: Sport_kind,
+                        attributes: {exclude: ['id', 'program', 'registration_number']}
+                    },
                     {
                         model: AppointmentPlace,
                         attributes: {exclude: ['id', 'countryId', 'regionId', 'townId', 'appointmentId']},
@@ -104,17 +109,17 @@ Report.addScope(
                             },
                             {
                                 model: Region,
-                                attributes: {exclude: ['id']}
+                                attributes: {exclude: ['id', 'region_group', 'countryId']}
                             },
                             {
                                 model: Town,
-                                attributes: {exclude: ['id']}
+                                attributes: {exclude: ['id', 'regionId']}
                             },
-                        ],
-                    }
+                        ]
+                    },
                 ],
             }
-        ]
+        ],
     }
 );
 
