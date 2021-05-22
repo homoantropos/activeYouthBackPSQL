@@ -50,28 +50,20 @@ class Educational_entity_controller {
 
     async getAllEducationalEntities(req, res) {
         try {
-            const eduEntities = await Educational_entity.scope('getFullEduEntity').findAll();
-            res.status(201).json(eduEntities);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
-    async getEducationalEntitiesByCategory(req, res) {
-        try {
-
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
-    async getEducationalEntitiesByType(req, res) {
-        try {
-
+            let eduEntities = await Educational_entity.scope('getFullEduEntity').findAll();
+            if (req.query.eduEntityType) {
+                eduEntities = eduEntities.filter(eduEntity => eduEntity.eduEntityType === req.query.eduEntityType)
+            }
+            if (req.query.category) {
+                eduEntities = eduEntities.filter(eduEntity => eduEntity.category === req.query.category)
+            }
+            if (eduEntities.length === 0) {
+                res.status(404).json({
+                    message: 'Навчальних закладів за такими умовами в базі даних не існує'
+                });
+            } else {
+                res.status(201).json(eduEntities);
+            }
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -81,7 +73,16 @@ class Educational_entity_controller {
 
     async getOneEducationalEntityById(req, res) {
         try {
-
+            const eduEntity = await Educational_entity.scope('getFullEduEntity').findOne({
+                where: {id: req.params.id}
+            });
+            if(eduEntity) {
+                res.status(200).json(eduEntity);
+            } else {
+                res.status(404).json({
+                    message: 'Навчального закладу з таким id в базі даних не існує'
+                })
+            }
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -91,7 +92,12 @@ class Educational_entity_controller {
 
     async deleteEducationalEntity(req, res) {
         try {
-
+            await Educational_entity.destroy({
+                where: {id: req.params.id}
+            });
+            res.status(200).json({
+                message: 'Навчальний заклад успішно видалено з бази даних!'
+            })
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
