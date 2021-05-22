@@ -88,32 +88,32 @@ Appointment.belongsTo(User, {
 })
 
 Appointment.addScope(
-     'fullAppointment', {
-    include: [
-        {
-            model: Appointment_place,
-            attributes: {exclude: ['id', 'countryId', 'regionId', 'townId', 'appointmentId']},
-            include: [
-                {
-                    model: Country,
-                    attributes: {exclude: ['id']}
-                },
-                {
-                    model: Region,
-                    attributes: {exclude: ['id']}
-                },
-                {
-                    model: Town,
-                    attributes: {exclude: ['id']}
-                },
-            ],
-        },
-        {
-            model: Sport_kind,
-            attributes: {exclude: ['id']}
-        }
-    ]
-});
+    'fullAppointment', {
+        include: [
+            {
+                model: Appointment_place,
+                attributes: {exclude: ['id', 'countryId', 'regionId', 'townId', 'appointmentId']},
+                include: [
+                    {
+                        model: Country,
+                        attributes: {exclude: ['id']}
+                    },
+                    {
+                        model: Region,
+                        attributes: {exclude: ['id']}
+                    },
+                    {
+                        model: Town,
+                        attributes: {exclude: ['id']}
+                    },
+                ],
+            },
+            {
+                model: Sport_kind,
+                attributes: {exclude: ['id']}
+            }
+        ]
+    });
 
 module.exports = Appointment
 
