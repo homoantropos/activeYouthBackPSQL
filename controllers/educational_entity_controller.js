@@ -32,6 +32,7 @@ class Educational_entity_controller {
             await Educational_entity.update({
                 name: req.body.name,
                 category: req.body.category,
+                eduEntityType: req.body.eduEntityType,
                 regionId: region.id
             }, {
                 where: {

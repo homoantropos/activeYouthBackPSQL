@@ -8,6 +8,6 @@ router.patch('/', passport.authenticate('jwt', {session: false}), controller.upd
 router.get('/', controller.getAllMembers);
 router.get('/:id', controller.getOneMemberById);
 router.get('/:userId', controller.getMembersByUserId);
-router.delete('/:id', controller.deleteMember);
+router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.deleteMember);
 
 module.exports = router
