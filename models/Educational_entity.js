@@ -7,7 +7,7 @@ const Region = require('../models/Region');
 const Educational_entity = sequelize.define(
     'educational_entity', {
         name: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             allowNull: false,
             unique: 'eduEntity'
         },
