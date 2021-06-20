@@ -4,7 +4,6 @@ class Activity_controller {
 
     async createActivity(req, res) {
         try {
-            console.log(req.body);
             const activity = await Activity.create({
                 title: req.body.title,
                 author: req.body.author,
