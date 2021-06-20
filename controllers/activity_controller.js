@@ -4,10 +4,12 @@ class Activity_controller {
 
     async createActivity(req, res) {
         try {
+            console.log(req.body);
             const activity = await Activity.create({
                 title: req.body.title,
                 author: req.body.author,
                 content: req.body.content,
+                imageSrc: req.file ? req.file.path : '',
                 kindOfActivity: req.body.kindOfActivity,
                 userId: req.user.id
             });
@@ -25,6 +27,7 @@ class Activity_controller {
                 title: req.body.title,
                 author: req.body.author,
                 content: req.body.content,
+                imageSrc: req.file ? req.file.path : '',
                 kindOfActivity: req.body.kindOfActivity
             }, {
                 where: {id: req.params.id}

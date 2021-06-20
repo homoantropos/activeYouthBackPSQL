@@ -15,6 +15,10 @@ const Activity = sequelize.define('activity', {
         type: Sequelize.TEXT,
         allowNull: false
     },
+    imageSrc: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
     date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
