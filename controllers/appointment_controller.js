@@ -1,10 +1,9 @@
-const db = require('../database/db');
 const Appointment = require('../models/Appointment');
 const Appointment_place = require('../models/Appointment_place');
 const Sport_kind = require('../models/Sport_kind');
 const User = require('../models/User');
 const Report = require('../models/Report');
-const reportServise = require('./services/report_service');
+const reportService = require('./services/report_service');
 
 class Appointment_controller {
 
@@ -28,6 +27,7 @@ class Appointment_controller {
                 start,
                 finish,
                 duration: req.body.duration,
+                logoSrc: req.file ? req.file.path : '',
                 appointmentPlaceId: appointmentPlace.id,
                 organizationsParticipants: req.body.organizationsParticipants,
                 kpkv: req.body.kpkv,
@@ -40,7 +40,7 @@ class Appointment_controller {
                 userId: user.id
             });
 
-            const total_plan = reportServise.total_counter(req);
+            const total_plan = reportService.total_counter(req);
             console.log(total_plan);
             const person_per_day_plan = total_plan * appointment.duration;
 

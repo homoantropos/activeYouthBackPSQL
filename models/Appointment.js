@@ -29,6 +29,10 @@ const Appointment = sequelize.define(
             type: Sequelize.INTEGER,
             allowNull: false
         },
+        logoSrc: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         appointmentPlaceId: {
             type: Sequelize.INTEGER,
             unique: 'appointment'
