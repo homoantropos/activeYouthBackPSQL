@@ -1,4 +1,4 @@
-INSERT INTO region(region_name, region_group, country_id )
+INSERT INTO region(region_name, region_group, countryId )
     VALUES
         ('Автономна Республіка Крим', 1, 232),
         ('Вінницька область', 2, 232),

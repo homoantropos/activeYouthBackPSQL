@@ -3,20 +3,26 @@ const sequelize= require('../database/sequelize');
 
 
 
-const coach = sequelize.define('Coach', {
+const Coach = sequelize.define('Coach', {
     name: {
-
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: 'coach'
     },
     surname: {
         type: Sequelize.STRING,
-
+        allowNull: false,
+        unique: 'coach'
     },
     fathername: {
-
-    },
-    dateOfBirth: {
-
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: 'coach'
     }
-})
+},
+    {
+        freezeTableName: true,
+        timestamps: false
+    })
 
-module.exports = coach
+module.exports = Coach
