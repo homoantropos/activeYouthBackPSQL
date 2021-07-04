@@ -2,10 +2,14 @@ const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
 const Appointment = require('./Appointment');
+const Appointment_place = require('./Appointment_place');
 const Participant = require('./Participant');
 const Coach = require('./Coach');
 const Educational_entity = require('./Educational_entity');
+const Country = require('./Country');
+const Town = require('./Town');
 const Region = require('./Region');
+const Sport_kind = require('./Sport_kind');
 const User = require('./User');
 
 const Result = sequelize.define('result',
@@ -30,6 +34,7 @@ const Result = sequelize.define('result',
         },
         participantId: {
             type: Sequelize.INTEGER,
+            allowNull: false,
             unique: 'result'
         }
     },
@@ -75,4 +80,82 @@ Result.belongsTo(User, {
     onUpdate: 'NO ACTION'
 });
 
+Result.addScope(
+    'getFullResults', {
+        attributes: {
+            exclude: ['participantId', 'regionId', 'coachId', 'educationalEntityId', 'userId']
+        },
+        include: [
+            {
+                model: Appointment,
+                attributes: {
+                    exclude:
+                        [
+                            'id',
+                            'logoSrc',
+                            'kpkv',
+                            'haracter',
+                            'direction',
+                            'status',
+                            'organiser',
+                            'appointmentPlaceId',
+                            'userId',
+                            'sportKindId',
+                            'duration',
+                            'organizationsParticipants',
+                            'participants'
+                        ]
+                },
+                include: [
+                    {
+                        model: Appointment_place,
+                        attributes: {exclude: ['id', 'countryId', 'regionId', 'townId', 'appointmentId', 'address']},
+                        include: [
+                            {
+                                model: Country,
+                                attributes: {exclude: ['id']}
+                            },
+                            {
+                                model: Region,
+                                attributes: {exclude: ['id', 'countryId']}
+                            },
+                            {
+                                model: Town,
+                                attributes: {exclude: ['id', 'regionId']}
+                            }
+                        ]
+                    },
+                    {
+                        model: Sport_kind,
+                        attributes: {
+                            exclude: ['id', 'program', 'registration_number']
+                        }
+                    }
+                ]
+            },
+            {
+                model: Participant,
+                attributes: {
+                    exclude: ['id']
+                }
+            },
+            {
+                model: Coach,
+                attributes: {
+                    exclude: ['id']
+                }
+            },
+            {
+                model: Educational_entity,
+                attributes: {exclude: ['id', 'regionId']}
+            },
+            {
+                model: Region,
+                attributes: {
+                    exclude: ['id', 'countryId']
+                }
+            }
+        ]
+    }
+)
 module.exports = Result

@@ -1,9 +1,10 @@
-const db = require('../database/db');
-const sequelize = require('../database/sequelize');
 const Result = require('../models/Result');
 const Appointment = require('../models/Appointment');
 const Participant = require('../models/Participant');
-const Sequelize = require("sequelize");
+const Coach = require('../models/Coach');
+const Region = require('../models/Region');
+const Educational_entity = require('../models/Educational_entity');
+const User = require('../models/User');
 
 class Result_controller {
 
@@ -22,25 +23,58 @@ class Result_controller {
                             schoolchildOrStudent: req.body.participant.schoolchildOrStudent
                         }
                 },
-            )
+            );
+
             const appointment = await Appointment.findOne(
                 {
                     where:
                         {title: req.body.appointment.title}
                 });
+
+            const coach = await Coach.findOrCreate(
+                {
+                    where: {
+                        name: req.body.coach.coach_name,
+                        surname: req.body.coach.surname,
+                        fathername: req.body.coach.fathersName
+                    }
+                }
+            );
+
+            const educational_entity = await Educational_entity.findOne(
+                {
+                    where: {
+                        name: req.body.eduentity.name
+                    }
+                }
+            );
+
+            const region = await Region.findOne(
+                {
+                    where:
+                        {region_name: req.body.reg.region_name}
+                }
+            );
+
+            const user = await User.findOne({
+                where: {email: req.user.email},
+                attributes: ['id']
+            })
+
             const result = await participant[0].createResult(
                 {
                     appointmentId: appointment.id,
+                    coachId: coach[0].dataValues.id,
+                    regionId: region.id,
+                    educationalEntityId: educational_entity.id,
                     discipline: req.body.discipline,
-                    place: req.body.place,
-                    ratingPoints: req.body.ratingPoints,
-                    completed: req.body.completed
+                    completed: req.body.completed,
+                    userId: user.id
                 }
             );
-            console.log('result: ', result);
+
             res.status(200).json(result);
         } catch (error) {
-            console.log('error: ', error.message);
             res.status(500).json({
                 message: error.message ? error.message : error
             })
@@ -59,7 +93,23 @@ class Result_controller {
 
     async getAllResults(req, res) {
         try {
+            const results = await Result.scope('getFullResults').findAll();
+            res.status(201).json(results);
+        } catch (error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
 
+    async getResultsByAppointment(req, res) {
+        try {
+            const results = await Result.scope('getFullResults').findAll(
+                {
+                    where: {appointmentId: req.params.id}
+                }
+            );
+            res.status(201).json(results);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -119,7 +169,17 @@ class Result_controller {
 
     async deleteResult(req, res) {
         try {
-
+            const result = await Result.findOne(
+                {
+                    where: {id: req.params.id}
+                }
+            )
+            await Result.destroy({
+                where: {id: req.params.id}
+            })
+            res.status(201).json({
+                message: 'Результати видалені з бази даних'
+            })
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

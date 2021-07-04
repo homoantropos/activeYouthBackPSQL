@@ -41,7 +41,6 @@ class Appointment_controller {
             });
 
             const total_plan = reportService.total_counter(req);
-            console.log(total_plan);
             const person_per_day_plan = total_plan * appointment.duration;
 
             const report = await appointment.createReport({
@@ -56,7 +55,6 @@ class Appointment_controller {
                 person_per_day_plan
             });
 
-            console.log(report);
             res.status(201).json({appointment, report});
         } catch (error) {
             res.status(500).json({
@@ -121,7 +119,6 @@ class Appointment_controller {
         try {
             const calendar = await Report.scope('fullReport').findAll();
             res.status(200).json(calendar);
-            console.log(calendar);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
