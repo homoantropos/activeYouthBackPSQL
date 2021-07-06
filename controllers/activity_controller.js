@@ -32,7 +32,7 @@ class Activity_controller {
                 where: {id: req.params.id}
             })
             res.status(200).json({
-                message: 'Зміни успішно збережені.'
+                message: 'Вітаємо! Ваші зміни успішно збережені!'
             });
         } catch (error) {
             res.status(500).json({
