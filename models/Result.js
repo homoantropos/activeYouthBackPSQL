@@ -102,8 +102,7 @@ Result.addScope(
                             'userId',
                             'sportKindId',
                             'duration',
-                            'organizationsParticipants',
-                            'participants'
+                            'organizationsParticipants'
                         ]
                 },
                 include: [
@@ -154,6 +153,10 @@ Result.addScope(
                 attributes: {
                     exclude: ['id', 'countryId']
                 }
+            },
+            {
+                model: User,
+                attributes: {exclude: ['role', 'password', 'id']}
             }
         ]
     }

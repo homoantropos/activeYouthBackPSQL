@@ -7,10 +7,10 @@ router.post('/', passport.authenticate('jwt', {session: false}), controller.crea
 router.patch('/', passport.authenticate('jwt', {session: false}), controller.updateResult);
 router.get('/', controller.getAllResults);
 router.get('/:id', controller.getOneResultById);
-router.get('/appointment/:id', controller.getResultsByAppointment),
+router.get('/appointment/:id', passport.authenticate('jwt', {session: false}), controller.getResultsByAppointment),
 router.get('/:activityId', controller.getResultsByActivity);
 router.get('/:participantsType', controller.getResultsByKindOfStudents);
-router.get('/:userId', controller.getResultsByUserId);
+router.get('/:userId', passport.authenticate('jwt', {session: false}), controller.getResultsByUserId);
 router.get('/:date', controller.getResultsByDate);
 router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.deleteResult);
 

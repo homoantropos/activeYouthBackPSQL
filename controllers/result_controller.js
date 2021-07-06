@@ -5,6 +5,7 @@ const Coach = require('../models/Coach');
 const Region = require('../models/Region');
 const Educational_entity = require('../models/Educational_entity');
 const User = require('../models/User');
+const {response} = require("express");
 
 class Result_controller {
 
@@ -104,12 +105,29 @@ class Result_controller {
 
     async getResultsByAppointment(req, res) {
         try {
-            const results = await Result.scope('getFullResults').findAll(
+            let resp;
+            let results = await Result.scope('getFullResults').findAll(
                 {
                     where: {appointmentId: req.params.id}
                 }
             );
-            res.status(201).json(results);
+            console.log('before filtering: ', results);
+            results = results.filter(
+                result => result.user.email === req.user.email
+            );
+            console.log('after filtering: ', results);
+            if (results.length === 0) {
+                resp = await Appointment.scope('fullAppointment').findOne(
+                    {
+                        where: {
+                            id: req.params.id
+                        }
+                    }
+                );
+            } else {
+               resp = results;
+            }
+            res.status(201).json(resp);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
