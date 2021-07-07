@@ -111,11 +111,9 @@ class Result_controller {
                     where: {appointmentId: req.params.id}
                 }
             );
-            console.log('before filtering: ', results);
             results = results.filter(
                 result => result.user.email === req.user.email
             );
-            console.log('after filtering: ', results);
             if (results.length === 0) {
                 resp = await Appointment.scope('fullAppointment').findOne(
                     {
