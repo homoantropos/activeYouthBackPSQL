@@ -91,7 +91,6 @@ Result.addScope(
                 attributes: {
                     exclude:
                         [
-                            'id',
                             'logoSrc',
                             'kpkv',
                             'haracter',
@@ -133,26 +132,17 @@ Result.addScope(
                 ]
             },
             {
-                model: Participant,
-                attributes: {
-                    exclude: ['id']
-                }
+                model: Participant
             },
             {
-                model: Coach,
-                attributes: {
-                    exclude: ['id']
-                }
+                model: Coach
             },
             {
                 model: Educational_entity,
-                attributes: {exclude: ['id', 'regionId']}
+                attributes: {exclude: ['regionId']}
             },
             {
-                model: Region,
-                attributes: {
-                    exclude: ['id', 'countryId']
-                }
+                model: Region
             },
             {
                 model: User,

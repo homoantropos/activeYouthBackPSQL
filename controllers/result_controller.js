@@ -20,7 +20,7 @@ class Result_controller {
                             surname: req.body.participant.surname,
                             fathersName: req.body.participant.fathersName,
                             DoB,
-                            gender: req.body.participant.DoB,
+                            gender: req.body.participant.gender,
                             schoolchildOrStudent: req.body.participant.schoolchildOrStudent
                         }
                 },
@@ -84,7 +84,85 @@ class Result_controller {
 
     async updateResult(req, res) {
         try {
+            const DoB = new Date(req.body.participant.DoB);
+            await Participant.update(
+                {
+                    name: req.body.participant.name,
+                    surname: req.body.participant.surname,
+                    fathersName: req.body.participant.fathersName,
+                    DoB,
+                    gender: req.body.participant.gender,
+                    schoolchildOrStudent: req.body.participant.schoolchildOrStudent
+                }, {
+                    where: {id: req.body.participant.id}
+                }
+            );
 
+            const participant = await Participant.findOne({
+                where: {id: req.body.participant.id}
+            })
+
+            const appointment = await Appointment.findOne(
+                {
+                    where:
+                        {title: req.body.appointment.title}
+                });
+
+            await Coach.update(
+                {
+                    name: req.body.coach.name,
+                    surname: req.body.coach.surname,
+                    fathersName: req.body.coach.fathersName
+                }, {
+                    where: {
+                        id: req.body.coach.id
+                    }
+                }
+            );
+
+            const coach = await Coach.findOne({
+                where: {
+                    id: req.body.coach.id
+                }
+            })
+
+            const educational_entity = await Educational_entity.findOne({
+                    where: {
+                        name: req.body.educational_entity.name
+                    }
+                }
+            );
+
+            const region = await Region.findOne(
+                {
+                    where:
+                        {region_name: req.body.region.region_name}
+                }
+            );
+
+            const user = await User.findOne({
+                where: {email: req.user.email},
+                attributes: ['id']
+            })
+
+            await Result.update(
+                {
+                    appointmentId: appointment.id,
+                    participantId: participant.id,
+                    coachId: coach.id,
+                    regionId: region.id,
+                    educationalEntityId: educational_entity.id,
+                    discipline: req.body.discipline,
+                    completed: req.body.completed,
+                    userId: user.id
+                }, {
+                    where: {id: req.body.id}
+                }
+            );
+            const result = await Result.scope('getFullResults').findOne({
+                where: {id: req.body.id}
+            });
+            res.status(200).json(result);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -123,7 +201,7 @@ class Result_controller {
                     }
                 );
             } else {
-               resp = results;
+                resp = results;
             }
             res.status(201).json(resp);
         } catch (error) {
