@@ -5,7 +5,6 @@ const Coach = require('../models/Coach');
 const Region = require('../models/Region');
 const Educational_entity = require('../models/Educational_entity');
 const User = require('../models/User');
-const {response} = require("express");
 
 class Result_controller {
 
@@ -263,11 +262,6 @@ class Result_controller {
 
     async deleteResult(req, res) {
         try {
-            const result = await Result.findOne(
-                {
-                    where: {id: req.params.id}
-                }
-            )
             await Result.destroy({
                 where: {id: req.params.id}
             })
