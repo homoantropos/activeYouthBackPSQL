@@ -13,7 +13,7 @@ const Coach = sequelize.define('coach', {
             allowNull: false,
             unique: 'coach'
         },
-        fathername: {
+        fathersName: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: 'coach'

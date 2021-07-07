@@ -35,9 +35,9 @@ class Result_controller {
             const coach = await Coach.findOrCreate(
                 {
                     where: {
-                        name: req.body.coach.coach_name,
+                        name: req.body.coach.name,
                         surname: req.body.coach.surname,
-                        fathername: req.body.coach.fathersName
+                        fathersName: req.body.coach.fathersName
                     }
                 }
             );
@@ -45,7 +45,7 @@ class Result_controller {
             const educational_entity = await Educational_entity.findOne(
                 {
                     where: {
-                        name: req.body.eduentity.name
+                        name: req.body.educational_entity.name
                     }
                 }
             );
@@ -53,7 +53,7 @@ class Result_controller {
             const region = await Region.findOne(
                 {
                     where:
-                        {region_name: req.body.reg.region_name}
+                        {region_name: req.body.region.region_name}
                 }
             );
 
