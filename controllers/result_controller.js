@@ -84,6 +84,16 @@ class Result_controller {
     async updateResult(req, res) {
         try {
             const DoB = new Date(req.body.participant.DoB);
+            const candidate = await Participant.findOne({
+                where: {
+                    name: req.body.participant.name,
+                    surname: req.body.participant.surname,
+                    fathersName: req.body.participant.fathersName,
+                    DoB,
+                    gender: req.body.participant.gender,
+                    schoolchildOrStudent: req.body.participant.schoolchildOrStudent
+                }
+            })
             await Participant.update(
                 {
                     name: req.body.participant.name,
