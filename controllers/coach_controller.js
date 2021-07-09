@@ -1,4 +1,4 @@
-const db = require('../database/db');
+const Coach = require('../models/Coach');
 
 class Coach_controller {
 
@@ -24,6 +24,12 @@ class Coach_controller {
 
     async getAllCoaches(req, res) {
         try {
+            const coaches = await Coach.findAll({
+                order: [
+                    ['surname', 'ASC']
+                ]
+            });
+            res.status(201).json(coaches);
 
         } catch (error) {
             res.status(500).json({
