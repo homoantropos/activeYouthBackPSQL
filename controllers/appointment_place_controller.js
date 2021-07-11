@@ -6,6 +6,7 @@ class Appointment_place_controller {
 
     async createAppointmentPlace(req, res) {
         try {
+
             const town = await Town.findOne({
                 where: {town_name: req.body.town_name},
                 attributes: {exclude: ['town_name']},
@@ -14,6 +15,7 @@ class Appointment_place_controller {
                     attributes: ['countryId']
                 }
             });
+            console.log('town: ', town)
             const appointment_place = await town.createAppointment_place({
                 appointment_place_name: req.body.appointment_place_name,
                 address: req.body.address,

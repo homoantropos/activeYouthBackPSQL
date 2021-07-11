@@ -14,7 +14,7 @@ class Town_controller {
                 town_name: req.body.town_name,
                 regionId: region.id
             });
-            const towns = await Town.findAll({
+            const towns = await Town.scope('getFullTown').findAll({
                 order: [
                     ['town_name', 'ASC']
                 ]
@@ -39,8 +39,33 @@ class Town_controller {
             }, {
                 where: {id: req.body.id}
             });
+            const towns = await Town.findAll({
+                    include: [
+                        {
+                            model: Region,
+                            attributes: {
+                                exclude: ['countryId', 'id']
+                            },
+                            include: {
+                                model: Country,
+                                attributes: {
+                                    exclude: ['id']
+                                }
+                            }
+                        }],
+                    attributes: {exclude: ['regionId']},
+                    order: [
+                        ['town_name', 'ASC']
+                    ]
+                },
+                {
+                    order: [
+                        ['town_name', 'ASC']
+                    ]
+                })
             res.status(201).json({
-                message: 'Зміни успішно збережені.'
+                message: 'Зміни успішно збережені.',
+                towns
             });
         } catch (error) {
             res.status(500).json({
@@ -113,8 +138,29 @@ class Town_controller {
             await Town.destroy({
                 where: {id: req.params.id}
             });
+            const towns = await Town.findAll({
+                    include: [
+                        {
+                            model: Region,
+                            attributes: {
+                                exclude: ['countryId', 'id']
+                            },
+                            include: {
+                                model: Country,
+                                attributes: {
+                                    exclude: ['id']
+                                }
+                            }
+                        }],
+                    attributes: {exclude: ['regionId']},
+                    order: [
+                        ['town_name', 'ASC']
+                    ]
+                }
+            )
             res.status(200).json({
-                message: `Назву міста успішно видалено з бази даних.`
+                message: `Назву міста успішно видалено з бази даних.`,
+                towns
             });
         } catch (error) {
             res.status(500).json({
