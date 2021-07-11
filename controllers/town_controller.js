@@ -14,7 +14,12 @@ class Town_controller {
                 town_name: req.body.town_name,
                 regionId: region.id
             });
-            res.status(201).json(town);
+            const towns = await Town.findAll({
+                order: [
+                    ['town_name', 'ASC']
+                ]
+            })
+            res.status(201).json({town, towns});
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
