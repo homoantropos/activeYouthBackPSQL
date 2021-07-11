@@ -57,7 +57,7 @@ class Result_controller {
             const result = await participant[0].createResult(
                 {
                     appointmentId: appointment.id,
-                    coachId: coach[0].dataValues.id,
+                    coachId: coach.id,
                     regionId: region.id,
                     educationalEntityId: educational_entity.id,
                     discipline: req.body.discipline,

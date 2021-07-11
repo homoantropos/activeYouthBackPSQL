@@ -44,7 +44,10 @@ const Result = sequelize.define('result',
     }
 )
 
-Appointment.hasMany(Result);
+Appointment.hasMany(Result, {
+    onDelete: "CASCADE",
+    onUpdate: 'CASCADE'
+});
 Result.belongsTo(Appointment, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION'

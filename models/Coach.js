@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-
 const Coach = sequelize.define('coach', {
         name: {
             type: Sequelize.STRING,
