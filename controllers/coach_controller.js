@@ -8,9 +8,11 @@ class Coach_controller {
         try {
             const coach = await coaches_service.getCoachFromDB(req.body);
             const coaches = await Coach.findAll(
-                {order: [
-                    ['id', 'DESC']
-                    ]}
+                {
+                    order: [
+                        ['id', 'DESC']
+                    ]
+                }
             )
             res.status(200).json({coach, coaches});
         } catch (error) {
@@ -29,15 +31,13 @@ class Coach_controller {
             }, {
                 where: {id: req.body.id}
             });
-            const coaches = await Coach.findAll(
+            const coach = await Coach.findOne(
                 {
-                    order: [
-                        ['surname', 'ASC']
-                    ]
+                   where: {id: req.body.id}
                 }
             );
             res.status(200).json({
-                coaches,
+                coach,
                 message: 'Вітаємо! Ваші зміни збережено!'
             });
         } catch (error) {
@@ -85,7 +85,10 @@ class Coach_controller {
 
     async getOneCoachById(req, res) {
         try {
-
+            const coach = await Coach.findOne({
+                where: {id: req.params.id}
+            })
+            res.status(200).json(coach)
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
