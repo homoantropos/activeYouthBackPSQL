@@ -104,7 +104,6 @@ class Coach_controller {
                 }
             });
             if (candidate.length > 0) {
-                console.log(candidate);
                 res.status(404).json({
                     message: 'Тренер звязаний з базою результатів і не може бути видалений з бази даних.'
                 });
