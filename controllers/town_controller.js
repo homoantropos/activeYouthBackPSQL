@@ -11,15 +11,12 @@ class Town_controller {
                 }
             );
             const town = await region.createTown({
-                town_name: req.body.town_name,
+                townName: req.body.townName,
                 regionId: region.id
             });
-            const towns = await Town.scope('getFullTown').findAll({
-                order: [
-                    ['town_name', 'ASC']
-                ]
-            })
-            res.status(201).json({town, towns});
+            res.status(201).json({
+                town,
+                message: `${town.townName} успішно додано до бази даних.`});
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -34,38 +31,18 @@ class Town_controller {
                 }
             );
             await Town.update({
-                town_name: req.body.town_name,
+                townName: req.body.townName,
                 regionId: region.id
             }, {
                 where: {id: req.body.id}
             });
-            const towns = await Town.findAll({
-                    include: [
-                        {
-                            model: Region,
-                            attributes: {
-                                exclude: ['countryId', 'id']
-                            },
-                            include: {
-                                model: Country,
-                                attributes: {
-                                    exclude: ['id']
-                                }
-                            }
-                        }],
-                    attributes: {exclude: ['regionId']},
-                    order: [
-                        ['town_name', 'ASC']
-                    ]
-                },
-                {
-                    order: [
-                        ['town_name', 'ASC']
-                    ]
-                })
+
+            const town = await Town.scope('getFullTown').findOne({
+                where: {id: req.body.id}
+            })
             res.status(201).json({
+                town,
                 message: 'Зміни успішно збережені.',
-                towns
             });
         } catch (error) {
             res.status(500).json({
@@ -92,7 +69,7 @@ class Town_controller {
                     }],
                 attributes: {exclude: ['regionId']},
                 order: [
-                    ['town_name', 'ASC']
+                    ['townName', 'ASC']
                 ]
             });
             if (req.query.regionName) {
@@ -154,7 +131,7 @@ class Town_controller {
                         }],
                     attributes: {exclude: ['regionId']},
                     order: [
-                        ['town_name', 'ASC']
+                        ['townName', 'ASC']
                     ]
                 }
             )

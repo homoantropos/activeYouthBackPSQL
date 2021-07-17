@@ -8,14 +8,15 @@ class Appointment_place_controller {
         try {
 
             const town = await Town.findOne({
-                where: {town_name: req.body.town_name},
-                attributes: {exclude: ['town_name']},
+                where: {
+                    townName: req.body.townName},
+                attributes: {exclude: ['townName']},
                 include: {
                     model: Region,
                     attributes: ['countryId']
                 }
             });
-            console.log('town: ', town)
+
             const appointment_place = await town.createAppointment_place({
                 appointment_place_name: req.body.appointment_place_name,
                 address: req.body.address,
@@ -34,8 +35,8 @@ class Appointment_place_controller {
     async updateAppointmentPlace(req, res) {
         try {
             const town = await Town.findOne({
-                where: {town_name: req.body.town_name},
-                attributes: {exclude: ['town_name']},
+                where: {townName: req.body.townName},
+                attributes: {exclude: ['townName']},
                 include: {
                     model: Region,
                     attributes: ['countryId']

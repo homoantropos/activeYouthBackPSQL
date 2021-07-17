@@ -6,7 +6,7 @@ const Country = require("../models/Country");
 const Town = sequelize.define(
     'town',
     {
-        town_name: {
+        townName: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: false

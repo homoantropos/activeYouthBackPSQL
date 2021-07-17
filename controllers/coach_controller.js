@@ -7,14 +7,15 @@ class Coach_controller {
     async createCoach(req, res) {
         try {
             const coach = await coaches_service.getCoachFromDB(req.body);
-            const coaches = await Coach.findAll(
-                {
-                    order: [
-                        ['id', 'DESC']
-                    ]
+            res.status(200).json({
+                    coach,
+                    message: `
+               ${coach.surname} ${coach.name} ${coach.fathersName}
+                успішно доданий(а) до бази тренерів.
+                `
                 }
             )
-            res.status(200).json({coach, coaches});
+            ;
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -33,7 +34,7 @@ class Coach_controller {
             });
             const coach = await Coach.findOne(
                 {
-                   where: {id: req.body.id}
+                    where: {id: req.body.id}
                 }
             );
             res.status(200).json({
