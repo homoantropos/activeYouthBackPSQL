@@ -5,13 +5,13 @@ const Country = require('../models/Country');
 const Region = sequelize.define(
     'region',
     {
-        region_name: {
+        regionName: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true
         },
-        region_group: {
-            type: Sequelize.INTEGER,
+        regionGroup: {
+            type: Sequelize.STRING,
             allowNull: false
         }
     },
@@ -24,6 +24,20 @@ Country.hasMany(Region, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
-Region.belongsTo(Country);
 
+Region.belongsTo(Country, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+
+Region.addScope('getFullRegion', {
+    attributes: {
+        exclude: [
+            'countryId'
+        ]
+    },
+    include: {
+        model: Country
+    }
+})
 module.exports = Region

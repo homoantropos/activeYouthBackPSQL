@@ -21,7 +21,10 @@ const Sport_hall = sequelize.define(
         timestamps: false
     });
 
-Town.hasMany(Sport_hall);
+Town.hasMany(Sport_hall, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
 Sport_hall.belongsTo(Town, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'

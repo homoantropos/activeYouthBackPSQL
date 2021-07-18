@@ -16,7 +16,11 @@ const Town = sequelize.define(
         timestamps: false
     });
 
-Region.hasMany(Town);
+Region.hasMany(Town, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+
 Town.belongsTo(Region, {
     onDelete: 'CASCADE',
     onUpdate: 'NO ACTION'

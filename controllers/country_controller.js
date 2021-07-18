@@ -5,7 +5,7 @@ class Country_controller {
     async createCountry(req, res) {
         try {
             const country = await Country.create({
-                country_name: req.body.country_name
+                countryName: req.body.countryName
             });
             res.status(201).json(country);
         } catch (error) {
@@ -18,7 +18,7 @@ class Country_controller {
     async updateCountry(req, res) {
         try {
             const country = await Country.update({
-                country_name: req.body.country_name
+                countryName: req.body.countryName
             }, {
                 where: {id: req.body.id}
             });
@@ -36,7 +36,7 @@ class Country_controller {
         try {
             const countries = await Country.findAll({
                 order: [
-                    ['country_name', 'ASC']
+                    ['countryName', 'ASC']
                 ]
             });
             res.status(200).json(countries);

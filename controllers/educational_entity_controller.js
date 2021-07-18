@@ -6,7 +6,7 @@ class Educational_entity_controller {
     async createEducationalEntity(req, res) {
         try {
             const region = await Region.findOne({
-                where: {region_name: req.body.region_name}
+                where: {regionName: req.body.regionName}
             });
             console.log(region);
             const educational_entity = await region.createEducational_entity({
@@ -26,7 +26,7 @@ class Educational_entity_controller {
         try {
             const region = await Region.findOne({
                 where: {
-                    region_name: req.body.region_name
+                    regionName: req.body.regionName
                 }
             })
             await Educational_entity.update({

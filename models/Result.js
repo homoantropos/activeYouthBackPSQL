@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
 const Appointment = require('./Appointment');
-const Appointment_place = require('./Appointment_place');
+const Appointment_place = require('./AppointmentPlace');
 const Participant = require('./Participant');
 const Coach = require('./Coach');
 const Educational_entity = require('./Educational_entity');
@@ -48,6 +48,7 @@ Appointment.hasMany(Result, {
     onDelete: "CASCADE",
     onUpdate: 'CASCADE'
 });
+
 Result.belongsTo(Appointment, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION'

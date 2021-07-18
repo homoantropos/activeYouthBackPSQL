@@ -22,7 +22,7 @@ class Activity_controller {
 
     async updateActivity(req, res) {
         try {
-            const activity = await Activity.update({
+            await Activity.update({
                 title: req.body.title,
                 author: req.body.author,
                 content: req.body.content,

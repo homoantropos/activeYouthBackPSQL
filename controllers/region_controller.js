@@ -8,15 +8,21 @@ class Region_controller {
         try {
             const country = await Country.findOne({
                 where: {
-                    country_name: req.body.country
+                    countryName: req.body.country.countryName
                 }
             });
-            const region = await country.createRegion({
-                region_name: req.body.region_name,
-                region_group: req.body.region_group,
+            const candidate = await country.createRegion({
+                regionName: req.body.regionName,
+                regionGroup: req.body.regionGroup,
                 countryId: country.id
             });
-            res.status(201).json(region);
+            const region = await Region.scope('getFullRegion').findOne({
+                where: {id: candidate.id}
+            })
+            res.status(201).json({
+                region,
+                message: `${region.regionName} успішно додано до бази даних!`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -27,13 +33,19 @@ class Region_controller {
     async updateRegion(req, res) {
         try {
             await Region.update({
-                region_name: req.body.region_name,
-                region_group: req.body.region_group,
+                regionName: req.body.regionName,
+                regionGroup: req.body.regionGroup,
                 countryId: req.body.countryId
             }, {
                 where: {id: req.body.id}
             })
+            const region = await Region.scope('getFullRegion').findOne({
+                where: {
+                    id: req.body.id
+                }
+            })
             res.status(200).json({
+                region,
                 message: "Зміни успішно збережені."
             });
         } catch (error) {
@@ -51,14 +63,14 @@ class Region_controller {
                         region_group: req.query.regionGroup
                     },
                     order: [
-                        ['region_name', 'ASC']
+                        ['regionName', 'ASC']
                     ]
                 });
                 res.status(200).json(regions);
             } else {
                 const regions = await Region.findAll({
                     order: [
-                        ['region_name', 'ASC']
+                        ['regionName', 'ASC']
                     ],
                     include: {
                         model: Country,
@@ -76,7 +88,7 @@ class Region_controller {
 
     async getOneRegionById(req, res) {
         try {
-            const region = await Region.findOne({
+            const region = await Region.scope('getFullRegion').findOne({
                 where: {id: req.params.id}
             })
             res.status(200).json(region);

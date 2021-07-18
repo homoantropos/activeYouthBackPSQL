@@ -1,4 +1,4 @@
-const Appointment_place = require('../models/Appointment_place');
+const AppointmentPlace = require('../models/AppointmentPlace');
 const Town = require('../models/Town');
 const Region = require('../models/Region');
 
@@ -17,8 +17,8 @@ class Appointment_place_controller {
                 }
             });
 
-            const appointment_place = await town.createAppointment_place({
-                appointment_place_name: req.body.appointment_place_name,
+            const appointment_place = await town.createAppointmentPlace({
+                appointmentPlaceName: req.body.appointmentPlaceName,
                 address: req.body.address,
                 countryId: town.region.countryId,
                 regionId: town.regionId,
@@ -42,8 +42,8 @@ class Appointment_place_controller {
                     attributes: ['countryId']
                 }
             });
-            await Appointment_place.update({
-                appointment_place_name: req.body.appointment_place_name,
+            await AppointmentPlace.update({
+                appointmentPlaceName: req.body.appointmentPlaceName,
                 address: req.body.address,
                 countryId: town.region.countryId,
                 regionId: town.regionId,
@@ -63,7 +63,7 @@ class Appointment_place_controller {
 
     async deleteAppointmentPlace(req, res) {
         try {
-            await Appointment_place.destroy({
+            await AppointmentPlace.destroy({
                 where: {id: req.params.id}
             });
             res.status(200).json({
@@ -79,8 +79,8 @@ class Appointment_place_controller {
 
     async getAllPlaces(req, res) {
         try {
-            const appointment_places = await Appointment_place.scope('appointmentPlace').findAll();
-            res.status(200).json(appointment_places);
+            const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findAll();
+            res.status(200).json(appointmentPlace);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -90,9 +90,9 @@ class Appointment_place_controller {
 
     async getOneAppointmentPlaceById(req, res) {
         try {
-            const appointment_place = await Appointment_place.scope('appointmentPlace')
+            const appointmentPlace = await AppointmentPlace.scope('appointmentPlace')
                 .findOne({where: {id: req.params.id}});
-            res.status(200).json(appointment_place);
+            res.status(200).json(appointmentPlace);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
 const Appointment = require('./Appointment');
-const AppointmentPlace = require('./Appointment_place');
+const AppointmentPlace = require('./AppointmentPlace');
 const Country = require('../models/Country');
 const Region = require('../models/Region');
 const Town = require('../models/Town');

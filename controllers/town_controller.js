@@ -7,13 +7,16 @@ class Town_controller {
     async createTown(req, res) {
         try {
             const region = await Region.findOne({
-                    where: {region_name: req.body.region.region_name}
+                    where: {regionName: req.body.region.regionName}
                 }
             );
-            const town = await region.createTown({
+            const candidate = await region.createTown({
                 townName: req.body.townName,
                 regionId: region.id
             });
+            const town = await Town.scope('getFullTown').findOne({
+                where: {id: candidate.id}
+            })
             res.status(201).json({
                 town,
                 message: `${town.townName} успішно додано до бази даних.`});
@@ -27,7 +30,7 @@ class Town_controller {
     async updateTown(req, res) {
         try {
             const region = await Region.findOne({
-                    where: {region_name: req.body.region.region_name}
+                    where: {regionName: req.body.region.regionName}
                 }
             );
             await Town.update({
@@ -73,7 +76,7 @@ class Town_controller {
                 ]
             });
             if (req.query.regionName) {
-                towns.filter(town => town.region.region_name === regionName);
+                towns.filter(town => town.region.regionName === regionName);
             }
             res.status(200).json(towns);
         } catch (error) {
@@ -115,29 +118,8 @@ class Town_controller {
             await Town.destroy({
                 where: {id: req.params.id}
             });
-            const towns = await Town.findAll({
-                    include: [
-                        {
-                            model: Region,
-                            attributes: {
-                                exclude: ['countryId', 'id']
-                            },
-                            include: {
-                                model: Country,
-                                attributes: {
-                                    exclude: ['id']
-                                }
-                            }
-                        }],
-                    attributes: {exclude: ['regionId']},
-                    order: [
-                        ['townName', 'ASC']
-                    ]
-                }
-            )
             res.status(200).json({
-                message: `Назву міста успішно видалено з бази даних.`,
-                towns
+                message: `Назву міста успішно видалено з бази даних.`
             });
         } catch (error) {
             res.status(500).json({

@@ -1,5 +1,5 @@
 const Appointment = require('../models/Appointment');
-const Appointment_place = require('../models/Appointment_place');
+const AppointmentPlace = require('../models/AppointmentPlace');
 const Sport_kind = require('../models/Sport_kind');
 const User = require('../models/User');
 const Report = require('../models/Report');
@@ -9,8 +9,8 @@ class Appointment_controller {
 
     async createAppointment(req, res) {
         try {
-            const appointmentPlace = await Appointment_place.scope('appointmentPlace').findOne({
-                where: {appointment_place_name: req.body.place.appointment_place_name}
+            const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
+                where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
             const sport_kind = await Sport_kind.findOne({
                 where: {sport_kind: req.body.sport_kind},
@@ -65,8 +65,8 @@ class Appointment_controller {
 
     async updateAppointment(req, res) {
         try {
-            const appointmentPlace = await Appointment_place.scope('appointmentPlace').findOne({
-                where: {appointment_place_name: req.body.place.appointment_place_name}
+            const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
+                where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
             const sport_kind = await Sport_kind.findOne({
                 where: {sport_kind: req.body.sport_kind},

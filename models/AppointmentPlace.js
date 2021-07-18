@@ -5,13 +5,13 @@ const Country = require('../models/Country');
 const Region = require('../models/Region');
 const Town = require('../models/Town');
 
-const Appointment_place = sequelize.define(
-    'appointment_place',
+const AppointmentPlace = sequelize.define(
+    'appointmentPlace',
     {
-        appointment_place_name: {
+        appointmentPlaceName: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: 'appointment_place'
+            unique: 'appointmentPlace'
         },
         address: {
             type: Sequelize.TEXT,
@@ -25,15 +25,15 @@ const Appointment_place = sequelize.define(
         },
         countryId: {
             type: Sequelize.INTEGER,
-            unique: 'appointment_place'
+            unique: 'appointmentPlace'
         },
         regionId: {
             type: Sequelize.INTEGER,
-            unique: 'appointment_place'
+            unique: 'appointmentPlace'
         },
         townId: {
             type: Sequelize.INTEGER,
-            unique: 'appointment_place'
+            unique: 'appointmentPlace'
         }
     },
     {
@@ -41,23 +41,23 @@ const Appointment_place = sequelize.define(
         timestamps: false
     });
 
-Country.hasMany(Appointment_place);
-Region.hasMany(Appointment_place);
-Town.hasMany(Appointment_place);
-Appointment_place.belongsTo(Country, {
+Country.hasMany(AppointmentPlace);
+Region.hasMany(AppointmentPlace);
+Town.hasMany(AppointmentPlace);
+AppointmentPlace.belongsTo(Country, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
-Appointment_place.belongsTo(Region, {
+AppointmentPlace.belongsTo(Region, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
-Appointment_place.belongsTo(Town, {
+AppointmentPlace.belongsTo(Town, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
 
-Appointment_place.addScope(
+AppointmentPlace.addScope(
     'appointmentPlace', {
         attributes: {exclude: ['countryId', 'regionId', 'townId', 'appointmentId']},
         include: [
@@ -77,4 +77,4 @@ Appointment_place.addScope(
     }
 )
 
-module.exports = Appointment_place
+module.exports = AppointmentPlace
