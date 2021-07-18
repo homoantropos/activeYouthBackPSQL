@@ -9,7 +9,7 @@ class Appointment_place_controller {
 
             const town = await Town.findOne({
                 where: {
-                    townName: req.body.townName},
+                    townName: req.body.town.townName},
                 attributes: {exclude: ['townName']},
                 include: {
                     model: Region,
@@ -17,14 +17,21 @@ class Appointment_place_controller {
                 }
             });
 
-            const appointment_place = await town.createAppointmentPlace({
+            const candidate = await town.createAppointmentPlace({
                 appointmentPlaceName: req.body.appointmentPlaceName,
                 address: req.body.address,
                 countryId: town.region.countryId,
                 regionId: town.regionId,
                 townId: town.id
             });
-            res.status(200).json(appointment_place);
+            const appointmentPlace = await AppointmentPlace
+                .scope('appointmentPlace').findOne({
+                    where: {id: candidate.id}
+                });
+            res.status(200).json({
+                appointmentPlace,
+                message: `${appointmentPlace.appointmentPlaceName} успішно додано до бази даних.`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
