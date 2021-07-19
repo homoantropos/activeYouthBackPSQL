@@ -42,7 +42,7 @@ class Appointment_place_controller {
     async updateAppointmentPlace(req, res) {
         try {
             const town = await Town.findOne({
-                where: {townName: req.body.townName},
+                where: {townName: req.body.town.townName},
                 attributes: {exclude: ['townName']},
                 include: {
                     model: Region,
@@ -57,7 +57,13 @@ class Appointment_place_controller {
                 townId: town.id},
             {where: {id: req.params.id}}
             );
+            const appointmentPlace= await AppointmentPlace.scope('appointmentPlace').findOne({
+                where: {
+                    id: req.params.id
+                }
+            })
             res.status(200).json({
+                appointmentPlace,
                 message: 'Зміни успішно збережені!'
             });
         } catch

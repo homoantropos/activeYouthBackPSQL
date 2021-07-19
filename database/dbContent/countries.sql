@@ -1,4 +1,4 @@
-INSERT INTO country(country_name)
+INSERT INTO country('countryName')
  VALUES
             ('АФГАНІСТАН'),
             ('АЛБАНІЯ'),

@@ -1,6 +1,6 @@
 INSERT INTO sport_kind(sport_kind, program, registration_number)
     VALUES
-       ('Бадмінтон','І',001),
+('Бадмінтон','І',001),
 ('Баскетбол','І',002),
 ('Бейсбол','І',003),
 ('Біатлон','І',004),
