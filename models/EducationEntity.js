@@ -4,8 +4,8 @@ const sequelize = require('../database/sequelize');
 const Country = require('../models/Country');
 const Region = require('../models/Region');
 
-const Educational_entity = sequelize.define(
-    'educational_entity', {
+const EducationEntity = sequelize.define(
+    'educationEntity', {
         name: {
             type: Sequelize.TEXT,
             allowNull: false,
@@ -31,18 +31,18 @@ const Educational_entity = sequelize.define(
     }
 )
 
-Region.hasMany(Educational_entity)
-Educational_entity.belongsTo(Region, {
+Region.hasMany(EducationEntity)
+EducationEntity.belongsTo(Region, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
 
-Educational_entity.addScope(
+EducationEntity.addScope(
     'getFullEduEntity', {
         attributes: {exclude: ['regionId']},
         include: {
             model: Region,
-            attributes: {exclude: ['id', 'region_group', 'countryId']},
+            attributes: {exclude: ['id', 'regionGroup', 'countryId']},
             include: {
                 model: Country,
                 attributes: {exclude: ['id']}
@@ -51,4 +51,4 @@ Educational_entity.addScope(
     }
 );
 
-module.exports = Educational_entity
+module.exports = EducationEntity

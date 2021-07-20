@@ -1,20 +1,19 @@
 const Region = require('../models/Region');
-const Educational_entity = require('../models/Educational_entity');
+const Educational_entity = require('../models/EducationEntity');
 
-class Educational_entity_controller {
+class EducationEntity_controller {
 
-    async createEducationalEntity(req, res) {
+    async createEducationEntity(req, res) {
         try {
             const region = await Region.findOne({
                 where: {regionName: req.body.regionName}
             });
-            console.log(region);
-            const educational_entity = await region.createEducational_entity({
+            const educationEntity = await region.createEducationEntity({
                 name: req.body.name,
                 eduEntityType: req.body.eduEntityType,
                 category: req.body.category
             });
-            res.status(200).json(educational_entity);
+            res.status(200).json(educationEntity);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -107,4 +106,4 @@ class Educational_entity_controller {
     }
 }
 
-module.exports = new Educational_entity_controller()
+module.exports = new EducationEntity_controller()

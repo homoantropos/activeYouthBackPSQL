@@ -4,7 +4,7 @@ const Participant = require('../models/Participant');
 const Coach = require('../models/Coach');
 const coaches_service = require('../controllers/services/coaches_service');
 const Region = require('../models/Region');
-const Educational_entity = require('../models/Educational_entity');
+const EducationEntity = require('../models/EducationEntity');
 const User = require('../models/User');
 
 class Result_controller {
@@ -34,14 +34,13 @@ class Result_controller {
 
             const coach = await coaches_service.getCoachFromDB(req.body.coach);
 
-            const educational_entity = await Educational_entity.findOne(
+            const educationEntity = await EducationEntity.findOne(
                 {
                     where: {
-                        name: req.body.educational_entity.name
+                        name: req.body.educationEntity.name
                     }
                 }
             );
-
             const region = await Region.findOne(
                 {
                     where:
@@ -59,7 +58,7 @@ class Result_controller {
                     appointmentId: appointment.id,
                     coachId: coach.id,
                     regionId: region.id,
-                    educationalEntityId: educational_entity.id,
+                    educationEntityId: educationEntity.id,
                     discipline: req.body.discipline,
                     completed: req.body.completed,
                     userId: user.id
@@ -120,9 +119,9 @@ class Result_controller {
                 }
             })
 
-            const educational_entity = await Educational_entity.findOne({
+            const educationEntity = await EducationEntity.findOne({
                     where: {
-                        name: req.body.educational_entity.name
+                        name: req.body.educationEntity.name
                     }
                 }
             );
@@ -145,7 +144,7 @@ class Result_controller {
                     participantId: participant.id,
                     coachId: coach.id,
                     regionId: region.id,
-                    educationalEntityId: educational_entity.id,
+                    educationEntityId: educationEntity.id,
                     discipline: req.body.discipline,
                     completed: req.body.completed,
                     userId: user.id
