@@ -51,18 +51,49 @@ class EducationEntity_controller {
     async getAllEducationalEntities(req, res) {
         try {
             let eduEntities = await Educational_entity.scope('getFullEduEntity').findAll();
+            const eduEntityNames = [];
             if (req.query.eduEntityType) {
-                eduEntities = eduEntities.filter(eduEntity => eduEntity.eduEntityType === req.query.eduEntityType)
+                eduEntities = eduEntities.filter(eduEntity => eduEntity.eduEntityType === req.query.eduEntityType);
             }
             if (req.query.category) {
-                eduEntities = eduEntities.filter(eduEntity => eduEntity.category === req.query.category)
+                eduEntities = eduEntities.filter(eduEntity => eduEntity.category === req.query.category);
+            }
+            if (req.query.regionName) {
+                eduEntities = eduEntities.filter(eduEntity => eduEntity.region.regionName === req.query.regionName);
+                eduEntities.map(
+                    eduEntity => eduEntityNames.push(eduEntity.name)
+                )
             }
             if (eduEntities.length === 0) {
                 res.status(404).json({
                     message: 'Навчальних закладів за такими умовами в базі даних не існує'
                 });
             } else {
-                res.status(201).json(eduEntities);
+                res.status(201).json({eduEntities, eduEntityNames});
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: error.message ? error.message : error
+            })
+        }
+    }
+
+    async getEducationalEntitiesNamesByRegion(req, res) {
+        try {
+            let eduEntities = await Educational_entity.scope('getFullEduEntity').findAll();
+            const eduEntityNames = [];
+            if (req.query.regionName) {
+                eduEntities = eduEntities.filter(eduEntity => eduEntity.region.regionName === req.query.regionName);
+                eduEntities.map(
+                    eduEntity => eduEntityNames.push(eduEntity.name)
+                )
+            }
+            if (eduEntities.length === 0) {
+                res.status(404).json({
+                    message: 'Навчальних закладів за такими умовами в базі даних не існує'
+                });
+            } else {
+                res.status(201).json(eduEntityNames);
             }
         } catch (error) {
             res.status(500).json({
@@ -76,7 +107,7 @@ class EducationEntity_controller {
             const eduEntity = await Educational_entity.scope('getFullEduEntity').findOne({
                 where: {id: req.params.id}
             });
-            if(eduEntity) {
+            if (eduEntity) {
                 res.status(200).json(eduEntity);
             } else {
                 res.status(404).json({
