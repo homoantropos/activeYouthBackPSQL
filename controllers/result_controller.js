@@ -53,7 +53,7 @@ class Result_controller {
                 attributes: ['id']
             })
 
-            const result = await participant[0].createResult(
+            const candidate = await participant[0].createResult(
                 {
                     appointmentId: appointment.id,
                     coachId: coach.id,
@@ -64,8 +64,9 @@ class Result_controller {
                     userId: user.id
                 }
             );
-
-
+            const result = await Result.scope('getFullResults').findOne({
+                where: {id: candidate.id}
+            })
             res.status(200).json(result);
         } catch (error) {
             res.status(500).json({
