@@ -64,6 +64,7 @@ class Result_controller {
                     userId: user.id
                 }
             );
+
             const result = await Result.scope('getFullResults').findOne({
                 where: {id: candidate.id}
             })
@@ -177,7 +178,7 @@ class Result_controller {
 
     async getResultsByAppointment(req, res) {
         try {
-            let resp;
+            let resultsOrAppointment;
             let results = await Result.scope('getFullResults').findAll(
                 {
                     where: {appointmentId: req.params.id}
@@ -187,7 +188,7 @@ class Result_controller {
                 result => result.user.email === req.user.email
             );
             if (results.length === 0) {
-                resp = await Appointment.scope('fullAppointment').findOne(
+                resultsOrAppointment = await Appointment.scope('fullAppointment').findOne(
                     {
                         where: {
                             id: req.params.id
@@ -195,9 +196,9 @@ class Result_controller {
                     }
                 );
             } else {
-                resp = results;
+                resultsOrAppointment = results;
             }
-            res.status(201).json(resp);
+            res.status(201).json(resultsOrAppointment);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
