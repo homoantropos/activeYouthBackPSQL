@@ -66,6 +66,7 @@ class EducationEntity_controller {
             }
             if (eduEntities.length === 0) {
                 res.status(404).json({
+                    eduEntities,
                     message: 'Навчальних закладів за такими умовами в базі даних не існує'
                 });
             } else {
