@@ -16,7 +16,6 @@ class EducationEntity_controller {
             const educationEntity = await EducationEntity.scope('getFullEduEntity').findOne({
                 where: {id: candidate.id}
             })
-
             res.status(200).json({
                 educationEntity,
                 message: `${educationEntity.name} успішно додано до бази даних`
@@ -83,9 +82,8 @@ class EducationEntity_controller {
             }
             if (eduEntities.length === 0) {
                 message = 'Навчальних закладів за такими умовами в базі даних не існує'
-            } else {
-                res.status(201).json({eduEntities, eduEntityNames, message});
             }
+            res.status(201).json({eduEntities, eduEntityNames, message});
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
