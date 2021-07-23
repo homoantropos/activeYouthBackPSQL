@@ -1,19 +1,26 @@
 const Region = require('../models/Region');
-const Educational_entity = require('../models/EducationEntity');
+const EducationEntity = require('../models/EducationEntity');
 
 class EducationEntity_controller {
 
     async createEducationEntity(req, res) {
         try {
             const region = await Region.findOne({
-                where: {regionName: req.body.regionName}
+                where: {regionName: req.body.region.regionName}
             });
-            const educationEntity = await region.createEducationEntity({
+            const candidate = await region.createEducationEntity({
                 name: req.body.name,
                 eduEntityType: req.body.eduEntityType,
                 category: req.body.category
             });
-            res.status(200).json(educationEntity);
+            const educationEntity = await EducationEntity.scope('getFullEduEntity').findOne({
+                where: {id: candidate.id}
+            })
+
+            res.status(200).json({
+                educationEntity,
+                message: `${educationEntity.name} успішно додано до бази даних`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -25,10 +32,10 @@ class EducationEntity_controller {
         try {
             const region = await Region.findOne({
                 where: {
-                    regionName: req.body.regionName
+                    regionName: req.body.region.regionName
                 }
             })
-            await Educational_entity.update({
+            await EducationEntity.update({
                 name: req.body.name,
                 category: req.body.category,
                 eduEntityType: req.body.eduEntityType,
@@ -38,7 +45,11 @@ class EducationEntity_controller {
                     id: req.params.id
                 }
             });
+            const educationEntity = await EducationEntity.scope('getFullEduEntity').findOne({
+                where: {id: req.params.id}
+            })
             res.status(201).json({
+                educationEntity,
                 message: 'Ваші зміни успішно збережені.'
             });
         } catch (error) {
@@ -50,7 +61,12 @@ class EducationEntity_controller {
 
     async getAllEducationalEntities(req, res) {
         try {
-            let eduEntities = await Educational_entity.scope('getFullEduEntity').findAll();
+            let eduEntities = await EducationEntity.scope('getFullEduEntity').findAll(
+                {
+                    order: [
+                        ['name', 'ASC']
+                    ]
+                });
             let message = ''
             const eduEntityNames = [];
             if (req.query.eduEntityType) {
@@ -79,7 +95,7 @@ class EducationEntity_controller {
 
     async getEducationalEntitiesNamesByRegion(req, res) {
         try {
-            let eduEntities = await Educational_entity.scope('getFullEduEntity').findAll();
+            let eduEntities = await EducationEntity.scope('getFullEduEntity').findAll();
             const eduEntityNames = [];
             if (req.query.regionName) {
                 eduEntities = eduEntities.filter(eduEntity => eduEntity.region.regionName === req.query.regionName);
@@ -103,7 +119,7 @@ class EducationEntity_controller {
 
     async getOneEducationalEntityById(req, res) {
         try {
-            const eduEntity = await Educational_entity.scope('getFullEduEntity').findOne({
+            const eduEntity = await EducationEntity.scope('getFullEduEntity').findOne({
                 where: {id: req.params.id}
             });
             if (eduEntity) {
@@ -122,7 +138,7 @@ class EducationEntity_controller {
 
     async deleteEducationalEntity(req, res) {
         try {
-            await Educational_entity.destroy({
+            await EducationEntity.destroy({
                 where: {id: req.params.id}
             });
             res.status(200).json({
