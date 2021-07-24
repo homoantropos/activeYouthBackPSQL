@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const controller = require('../controllers/user_controller');
 
-router.post('/register', controller.registerUser);
+router.post('/register', passport.authenticate('jwt', {session: false}), controller.registerUser);
 router.patch('/:id', passport.authenticate('jwt', {session: false}), controller.updateUser);
 router.post('/login', controller.login);
 router.get('/', passport.authenticate('jwt', {session: false}), controller.getAllUsers);
