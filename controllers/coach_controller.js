@@ -41,6 +41,7 @@ class Coach_controller {
                 coach,
                 message: 'Вітаємо! Ваші зміни збережено!'
             });
+
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

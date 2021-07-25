@@ -68,7 +68,10 @@ class Result_controller {
             const result = await Result.scope('getFullResults').findOne({
                 where: {id: candidate.id}
             })
-            res.status(200).json(result);
+            res.status(200).json({
+                result,
+                message: 'Вітаємо! Учасник успішно доданий до заявки!'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -79,47 +82,72 @@ class Result_controller {
     async updateResult(req, res) {
         try {
             const DoB = new Date(req.body.participant.DoB);
-
-            await Participant.update(
-                {
+            const participantCandidate = await Participant.findOne({
+                where: {
                     name: req.body.participant.name,
                     surname: req.body.participant.surname,
                     fathersName: req.body.participant.fathersName,
                     DoB,
                     gender: req.body.participant.gender,
                     schoolchildOrStudent: req.body.participant.schoolchildOrStudent
-                }, {
-                    where: {id: req.body.participant.id}
                 }
-            );
-
-            const participant = await Participant.findOne({
-                where: {id: req.body.participant.id}
             })
+            if (participantCandidate) {
+                await Result.update({
+                    participantId: participantCandidate.id
+                }, {
+                    where: {
+                        id: req.body.id
+                    }
+                });
+            } else {
+                await Participant.update(
+                    {
+                        name: req.body.participant.name,
+                        surname: req.body.participant.surname,
+                        fathersName: req.body.participant.fathersName,
+                        DoB,
+                        gender: req.body.participant.gender,
+                        schoolchildOrStudent: req.body.participant.schoolchildOrStudent
+                    }, {
+                        where: {id: req.body.participant.id}
+                    }
+                );
+            }
+
+            const coachCandidate = await Coach.findOne({
+                    where: {
+                        name: req.body.coach.name,
+                        surname: req.body.coach.surname,
+                        fathersName: req.body.coach.fathersName
+                    }
+                });
+            if (coachCandidate) {
+                await Result.update({
+                        coachId: coachCandidate.id
+                    },
+                    {
+                        where: {id: req.body.id}
+                    });
+            } else {
+                await Coach.update(
+                    {
+                        name: req.body.coach.name,
+                        surname: req.body.coach.surname,
+                        fathersName: req.body.coach.fathersName
+                    }, {
+                        where: {
+                            id: req.body.coach.id
+                        }
+                    }
+                );
+            }
 
             const appointment = await Appointment.findOne(
                 {
                     where:
                         {title: req.body.appointment.title}
                 });
-
-            await Coach.update(
-                {
-                    name: req.body.coach.name,
-                    surname: req.body.coach.surname,
-                    fathersName: req.body.coach.fathersName
-                }, {
-                    where: {
-                        id: req.body.coach.id
-                    }
-                }
-            );
-
-            const coach = await Coach.findOne({
-                where: {
-                    id: req.body.coach.id
-                }
-            })
 
             const educationEntity = await EducationEntity.findOne({
                     where: {
@@ -143,8 +171,6 @@ class Result_controller {
             await Result.update(
                 {
                     appointmentId: appointment.id,
-                    participantId: participant.id,
-                    coachId: coach.id,
                     regionId: region.id,
                     educationEntityId: educationEntity.id,
                     discipline: req.body.discipline,
@@ -157,7 +183,10 @@ class Result_controller {
             const result = await Result.scope('getFullResults').findOne({
                 where: {id: req.body.id}
             });
-            res.status(200).json(result);
+            res.status(200).json({
+                result,
+                message: 'Вітаємо! Ваші зміни успішно збережені!'
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
