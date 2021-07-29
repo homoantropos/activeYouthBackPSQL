@@ -1,20 +1,20 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-const Sport_kind = sequelize.define(
-    'sport_kind',
+const SportKind = sequelize.define(
+    'sportKind',
     {
-        sport_kind: {
+        sportKind: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: 'sport_kind'
+            unique: 'sportKind'
         },
         program: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: 'sport_kind'
+            unique: 'sportKind'
         },
-        registration_number: {
+        registrationNumber: {
             type: Sequelize.INTEGER,
             allowNull: false
         }
@@ -25,4 +25,4 @@ const Sport_kind = sequelize.define(
     }
 );
 
-module.exports = Sport_kind
+module.exports = SportKind

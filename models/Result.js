@@ -9,7 +9,7 @@ const Educational_entity = require('./EducationEntity');
 const Country = require('./Country');
 const Town = require('./Town');
 const Region = require('./Region');
-const Sport_kind = require('./Sport_kind');
+const SportKind = require('./SportKind');
 const User = require('./User');
 
 const Result = sequelize.define('result',
@@ -128,7 +128,7 @@ Result.addScope(
                         ]
                     },
                     {
-                        model: Sport_kind,
+                        model: SportKind,
                         attributes: {
                             exclude: ['id', 'program', 'registration_number']
                         }

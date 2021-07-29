@@ -1,15 +1,18 @@
-const Sport_kind = require('../models/Sport_kind');
+const SportKind = require('../models/SportKind');
 
-class Sports_kind_controller {
+class SportsKindController {
 
     async createSportKind(req, res) {
         try {
-            const sport_kind = await Sport_kind.create({
-                sport_kind: req.body.sport_kind,
+            const sportKind = await SportKind.create({
+                sportKind: req.body.sportKind,
                 program: req.body.program,
-                registration_number: req.body.registration_number
+                registrationNumber: req.body.registrationNumber
             });
-            res.status(201).json(sport_kind);
+            res.status(201).json({
+                sportKind,
+                message: `${sportKind.sportKind} успішно додано до бази даних.`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -19,14 +22,20 @@ class Sports_kind_controller {
 
     async updateSportKind(req, res) {
         try {
-            const sport_kind = await Sport_kind.update({
-                sport_kind: req.body.sport_kind,
+            await SportKind.update({
+                sportKind: req.body.sportKind,
                 program: req.body.program,
-                registration_number: req.body.registration_number
+                registrationNumber: req.body.registrationNumber
             }, {
                 where: {id: req.body.id}
             });
+            const sportKind = await SportKind.findOne({
+                where: {
+                    id: req.body.id
+                }
+            })
             res.status(200).json({
+                sportKind,
                 message: 'Зміни успішно збережені.'
             });
         } catch (error) {
@@ -38,12 +47,12 @@ class Sports_kind_controller {
 
     async getAllSportKinds(req, res) {
         try {
-            const sport_kinds = await Sport_kind.findAll({
+            const sportKinds = await SportKind.findAll({
                 order: [
-                    ['sport_kind', 'ASC']
+                    ['sportKind', 'ASC']
                 ]
             });
-            res.status(200).json(sport_kinds);
+            res.status(200).json(sportKinds);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -53,10 +62,10 @@ class Sports_kind_controller {
 
     async getOneSportKindById(req, res) {
         try {
-            const sport_kind = await Sport_kind.findOne({
+            const sportKind = await SportKind.findOne({
                 where: {id: req.params.id}
             });
-            res.status(200).json(sport_kind);
+            res.status(200).json(sportKind);
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -66,7 +75,7 @@ class Sports_kind_controller {
 
     async deleteSportKind(req, res) {
         try {
-            await Sport_kind.destroy({
+            await SportKind.destroy({
                 where: {id: req.params.id}
             });
             res.status(200).json({
@@ -80,4 +89,4 @@ class Sports_kind_controller {
     }
 }
 
-module.exports = new Sports_kind_controller()
+module.exports = new SportsKindController()

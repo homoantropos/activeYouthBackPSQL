@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-const Appointment_place = require('./AppointmentPlace');
-const Sport_kind = require('../models/Sport_kind');
+const AppointmentPlace = require('./AppointmentPlace');
+const SportKind = require('./SportKind');
 const Country = require('../models/Country');
 const Region = require('../models/Region');
 const Town = require('../models/Town');
@@ -71,16 +71,16 @@ const Appointment = sequelize.define(
         timestamps: false
     })
 
-Appointment.belongsTo(Appointment_place,
+Appointment.belongsTo(AppointmentPlace,
     {
         onDelete: 'NO ACTION',
         onUpdate: 'CASCADE'
     });
 
-Appointment_place.hasMany(Appointment);
+AppointmentPlace.hasMany(Appointment);
 
-Sport_kind.hasMany(Appointment);
-Appointment.belongsTo(Sport_kind, {
+SportKind.hasMany(Appointment);
+Appointment.belongsTo(SportKind, {
     onDelete: 'NO ACTION',
     onUpdate: 'CASCADE'
 })
@@ -95,7 +95,7 @@ Appointment.addScope(
     'fullAppointment', {
         include: [
             {
-                model: Appointment_place,
+                model: AppointmentPlace,
                 attributes: {exclude: ['id', 'countryId', 'regionId', 'townId', 'appointmentId']},
                 include: [
                     {
@@ -113,7 +113,7 @@ Appointment.addScope(
                 ],
             },
             {
-                model: Sport_kind,
+                model: SportKind,
                 attributes: {exclude: ['id']}
             }
         ]

@@ -1,6 +1,6 @@
 const Appointment = require('../models/Appointment');
 const AppointmentPlace = require('../models/AppointmentPlace');
-const Sport_kind = require('../models/Sport_kind');
+const SportKind = require('../models/SportKind');
 const User = require('../models/User');
 const Report = require('../models/Report');
 const reportService = require('./services/report_service');
@@ -12,8 +12,8 @@ class Appointment_controller {
             const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
                 where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
-            const sport_kind = await Sport_kind.findOne({
-                where: {sport_kind: req.body.sport_kind},
+            await SportKind.findOne({
+                where: {sportKind: req.body.sportKind},
                 attributes: ['id']
             });
             const user = await User.findOne({
@@ -36,7 +36,7 @@ class Appointment_controller {
                 direction: req.body.direction,
                 status: req.body.status,
                 organiser: req.body.organiser,
-                sportKindId: sport_kind.id,
+                sportKindId: sportkind.id,
                 userId: user.id
             });
 
@@ -68,8 +68,8 @@ class Appointment_controller {
             const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
                 where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
-            const sport_kind = await Sport_kind.findOne({
-                where: {sport_kind: req.body.sport_kind},
+            const sportKind = await SportKind.findOne({
+                where: {sportKind: req.body.sportKind},
                 attributes: ['id']
             });
             const user = await User.findOne({
@@ -91,7 +91,7 @@ class Appointment_controller {
                 direction: req.body.direction,
                 status: req.body.status,
                 organiser: req.body.organiser,
-                sportKindId: sport_kind.id,
+                sportKindId: sportKind.id,
                 userId: user.id
             }, {
                 where: {id: req.body.appointment_id}
