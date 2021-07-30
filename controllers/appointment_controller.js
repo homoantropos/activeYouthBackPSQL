@@ -12,7 +12,7 @@ class Appointment_controller {
             const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
                 where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
-            await SportKind.findOne({
+            const sportKind = await SportKind.findOne({
                 where: {sportKind: req.body.sportKind},
                 attributes: ['id']
             });
@@ -36,7 +36,7 @@ class Appointment_controller {
                 direction: req.body.direction,
                 status: req.body.status,
                 organiser: req.body.organiser,
-                sportKindId: sportkind.id,
+                sportKindId: sportKind.id,
                 userId: user.id
             });
 
