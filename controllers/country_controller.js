@@ -7,7 +7,10 @@ class Country_controller {
             const country = await Country.create({
                 countryName: req.body.countryName
             });
-            res.status(201).json(country);
+            res.status(201).json({
+                country,
+                message: `Країна ${country.countryName} успішно додана до бази даних`
+            });
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
@@ -17,12 +20,18 @@ class Country_controller {
 
     async updateCountry(req, res) {
         try {
-            const country = await Country.update({
+            await Country.update({
                 countryName: req.body.countryName
             }, {
                 where: {id: req.body.id}
             });
+            const country = await Country.findOne({
+                where: {
+                    id: req.body.id
+                }
+            })
             res.status(200).json({
+                country,
                 message: 'Зміни успішно збережені.'
             });
         } catch (error) {
