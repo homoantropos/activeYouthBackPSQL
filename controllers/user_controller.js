@@ -5,20 +5,33 @@ const ac = require('../middleware/ac');
 const User = require('../models/User');
 
 class User_controller {
+
     async registerUser(req, res) {
-        try {
-            const salt = await bcrypt.genSalt(10);
-            let password = await bcrypt.hash(req.body.password, salt);
-            const role = await ac.getRoleId(req.body.role);
-            const user = await User.create({
-                email: req.body.email,
-                password,
-                role
-            });
-            res.status(201).json(user);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
+        if (req.user.role === 'superAdmin') {
+            try {
+                const salt = await bcrypt.genSalt(10);
+                let password = await bcrypt.hash(req.body.password, salt);
+                const role = await ac.getRole(req.body.role);
+                if (typeof role === 'string') {
+                    const user = await User.create({
+                        email: req.body.email,
+                        password,
+                        role
+                    });
+                    res.status(201).json(user);
+                } else {
+                    res.status(401).json({
+                        message: role.message ? role.message : role
+                    });
+                }
+            } catch (error) {
+                res.status(500).json({
+                    message: error.message ? error.message : error
+                })
+            }
+        } else {
+            res.status(401).json({
+                message: 'Ви не маєте права реєструвати учасників, зверніться до адміністратора сайту.'
             })
         }
     }
@@ -61,25 +74,38 @@ class User_controller {
     }
 
     async updateUser(req, res) {
-        try {
-            const salt = await bcrypt.genSalt(10);
-            let password = await bcrypt.hash(req.body.password, salt);
-            await User.update({
-                    email: req.body.email,
-                    password,
-                    role: req.body.role
-                },
-                {
-                    where: {
-                        id: req.params.id
-                    }
-                })
-            res.status(200).json({
-                message: `Дані користувача успішно оновлено`
-            });
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
+        if (req.user.role === 'superAdmin') {
+            try {
+                const salt = await bcrypt.genSalt(10);
+                let password = await bcrypt.hash(req.body.password, salt);
+                const role = await ac.getRole(req.body.role);
+                if (typeof role === 'string') {
+                    await User.update({
+                            email: req.body.email,
+                            password,
+                            role
+                        },
+                        {
+                            where: {
+                                id: req.params.id
+                            }
+                        })
+                    res.status(200).json({
+                        message: `Дані користувача успішно оновлено`
+                    });
+                } else {
+                    res.status(401).json({
+                        message: role.message ? role.message : role
+                    });
+                }
+            } catch (error) {
+                res.status(401).json({
+                    message: error.message ? error.message : error
+                });
+            }
+        } else {
+            res.status(401).json({
+                message: 'Ви не маєте права реєструвати учасників, зверніться до адміністратора сайту.'
             })
         }
     }
