@@ -111,12 +111,18 @@ class User_controller {
     }
 
     async getAllUsers(req, res) {
-        try {
-            const users = await User.findAll();
-            res.status(201).json(users);
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
+        if(req.user.role === 'superAdmin') {
+            try {
+                const users = await User.findAll();
+                res.status(201).json(users);
+            } catch (error) {
+                res.status(500).json({
+                    message: error.message ? error.message : error
+                })
+            }
+        }  else {
+            res.status(401).json({
+                message: 'Ви не маєте права реєструвати учасників, зверніться до адміністратора сайту.'
             })
         }
     }
@@ -137,18 +143,24 @@ class User_controller {
     }
 
     async deleteUser(req, res) {
-        try {
-            await User.destroy({
-                where: {
-                    id: req.params.id
-                }
-            });
-            res.status(201).json({
-                message: `Користувача успішно видалено`
-            });
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
+        if (req.user.role === 'superAdmin') {
+            try {
+                await User.destroy({
+                    where: {
+                        id: req.params.id
+                    }
+                });
+                res.status(201).json({
+                    message: `Користувача успішно видалено`
+                });
+            } catch (error) {
+                res.status(500).json({
+                    message: error.message ? error.message : error
+                })
+            }
+        } else {
+            res.status(401).json({
+                message: 'Ви не маєте права реєструвати учасників, зверніться до адміністратора сайту.'
             })
         }
     }
