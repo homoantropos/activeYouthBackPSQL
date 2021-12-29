@@ -213,8 +213,8 @@ class Result_controller {
                     where: {appointmentId: req.params.id}
                 }
             );
-            if(req.user.role !== 'superAdmin') {
-                console.log(req.user.role);
+            if(req.query.allOrOneManager === 'true') {
+                console.log(req.query.allOrOneManager);
                 results = results.filter(
                     result => result.user.email === req.user.email
                 );
