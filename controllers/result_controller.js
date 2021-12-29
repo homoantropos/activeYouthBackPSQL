@@ -213,9 +213,12 @@ class Result_controller {
                     where: {appointmentId: req.params.id}
                 }
             );
-            results = results.filter(
-                result => result.user.email === req.user.email
-            );
+            if(req.user.role !== 'superAdmin') {
+                console.log(req.user.role);
+                results = results.filter(
+                    result => result.user.email === req.user.email
+                );
+            }
             if (results.length === 0) {
                 resultsOrAppointment = await Appointment.scope('fullAppointment').findOne(
                     {
