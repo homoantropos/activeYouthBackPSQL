@@ -210,7 +210,10 @@ class Result_controller {
             let resultsOrAppointment;
             let results = await Result.scope('getFullResults').findAll(
                 {
-                    where: {appointmentId: req.params.id}
+                    where: {appointmentId: req.params.id},
+                    order: [
+                        ['discipline', 'ASC']
+                    ]
                 }
             );
             if(req.query.allOrOneManager === 'true') {
