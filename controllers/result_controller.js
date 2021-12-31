@@ -174,6 +174,7 @@ class Result_controller {
                     regionId: region.id,
                     educationEntityId: educationEntity.id,
                     discipline: req.body.discipline,
+                    place: req.body.place,
                     completed: req.body.completed,
                     userId: user.id
                 }, {
@@ -217,7 +218,6 @@ class Result_controller {
                 }
             );
             if(req.query.allOrOneManager === 'true') {
-                console.log(req.query.allOrOneManager);
                 results = results.filter(
                     result => result.user.email === req.user.email
                 );
