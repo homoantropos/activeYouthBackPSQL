@@ -116,12 +116,12 @@ class Result_controller {
             }
 
             const coachCandidate = await Coach.findOne({
-                    where: {
-                        name: req.body.coach.name,
-                        surname: req.body.coach.surname,
-                        fathersName: req.body.coach.fathersName
-                    }
-                });
+                where: {
+                    name: req.body.coach.name,
+                    surname: req.body.coach.surname,
+                    fathersName: req.body.coach.fathersName
+                }
+            });
             if (coachCandidate) {
                 await Result.update({
                         coachId: coachCandidate.id
@@ -217,9 +217,14 @@ class Result_controller {
                     ]
                 }
             );
-            if(req.query.allOrOneManager === 'true') {
+            if (req.query.allOrOneManager === 'true') {
                 results = results.filter(
                     result => result.user.email === req.user.email
+                );
+            }
+            if (req.query.discipline) {
+                results = results.filter(
+                    result => result.discipline === req.query.discipline
                 );
             }
             if (results.length === 0) {
