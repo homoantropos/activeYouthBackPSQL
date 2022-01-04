@@ -98,7 +98,6 @@ Result.addScope(
                             'logoSrc',
                             'kpkv',
                             'haracter',
-                            'direction',
                             'status',
                             'organiser',
                             'appointmentPlaceId',

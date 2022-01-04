@@ -6,6 +6,7 @@ const coaches_service = require('../controllers/services/coaches_service');
 const Region = require('../models/Region');
 const EducationEntity = require('../models/EducationEntity');
 const User = require('../models/User');
+const ResultService = require('./services/result_service');
 
 class Result_controller {
 
@@ -197,7 +198,13 @@ class Result_controller {
 
     async getAllResults(req, res) {
         try {
-            const results = await Result.scope('getFullResults').findAll();
+            let results = await Result.scope('getFullResults').findAll();
+            results.map(
+                result => {
+                    result.ratingPoints = ResultService.getPointsByPlace(result.place)
+                    results.push(result);
+                }
+            );
             res.status(201).json(results);
         } catch (error) {
             res.status(500).json({
@@ -215,6 +222,12 @@ class Result_controller {
                     order: [
                         ['discipline', 'ASC']
                     ]
+                }
+            );
+            results.map(
+                result => {
+                    result.ratingPoints = ResultService.getPointsByPlace(result.place)
+                    results.push(result);
                 }
             );
             if (req.query.allOrOneManager === 'true') {
