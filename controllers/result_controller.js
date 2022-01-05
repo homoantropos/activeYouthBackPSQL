@@ -168,7 +168,13 @@ class Result_controller {
                 where: {email: req.user.email},
                 attributes: ['id']
             })
-
+            const resultCandidate = await Result.findOne({
+                where: {id: req.body.id}
+            })
+            let completed = req.body.completed;
+            if(resultCandidate) {
+                completed = resultCandidate.completed;
+            }
             await Result.update(
                 {
                     appointmentId: appointment.id,
@@ -176,7 +182,7 @@ class Result_controller {
                     educationEntityId: educationEntity.id,
                     discipline: req.body.discipline,
                     place: req.body.place,
-                    completed: req.body.completed,
+                    completed,
                     userId: user.id
                 }, {
                     where: {id: req.body.id}
