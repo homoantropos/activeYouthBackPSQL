@@ -202,7 +202,6 @@ class Result_controller {
             results.map(
                 result => {
                     result.ratingPoints = ResultService.getPointsByPlace(result.place)
-                    results.push(result);
                 }
             );
             res.status(201).json(results);
@@ -222,12 +221,6 @@ class Result_controller {
                     order: [
                         ['discipline', 'ASC']
                     ]
-                }
-            );
-            results.map(
-                result => {
-                    result.ratingPoints = ResultService.getPointsByPlace(result.place)
-                    results.push(result);
                 }
             );
             if (req.query.allOrOneManager === 'true') {
