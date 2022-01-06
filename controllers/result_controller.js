@@ -207,7 +207,7 @@ class Result_controller {
             let results = await Result.scope('getFullResults').findAll();
             results.map(
                 result => {
-                    result.ratingPoints = ResultService.getPointsByPlace(result.place)
+                    result.ratingPoints = ResultService.getPointsByPlace(result)
                 }
             );
             res.status(201).json(results);

@@ -5,9 +5,9 @@ class PlacesPoints {
 
     }
 
-    getPointsByPlace(place) {
+    getPointsByPlace(result) {
         let ratingPoints = 0;
-        switch (place) {
+        switch (result.place) {
             case 1 :
                 ratingPoints = 36;
                 break;
@@ -80,6 +80,10 @@ class PlacesPoints {
             case    24    :
                 ratingPoints = 1;
                 break;
+        }
+        if (result.appointment.status !== 'ukrainian'){
+            ratingPoints =
+                result.appointment.status === 'international' ? ratingPoints*1.5 : ratingPoints*0.5
         }
         return ratingPoints;
     }
