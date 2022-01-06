@@ -212,17 +212,19 @@ class Result_controller {
                 results = results.filter(result => result.appointment.participants === req.query.participants);
             }
             if (req.query.gender) {
-                results = results.filter(result => result.appointment.gender === req.query.gender);
+                results = results.filter(result => result.participant.gender === req.query.gender);
             }
             if (req.query.regionGroup) {
-                results = results.filter(result => result.appointment.regionGroup === req.query.regionGroup);
+                results = results.filter(result => result.region.regionGroup === req.query.regionGroup);
             }
             if (req.query.eduEntityType) {
-                results = results.filter(result => result.appointment.eduEntityType === req.query.eduEntityType);
+                results = results.filter(result => result.educationEntity.eduEntityType === req.query.eduEntityType);
             }
-            const category = Number(req.query.category);
-            if (category !== 0) {
-                results = results.filter(result => result.appointment.category === req.query.category);
+            if (req.query.category) {
+                const category = Number(req.query.category);
+                if (category !== 0) {
+                    results = results.filter(result => result.educationEntity.category === category);
+                }
             }
             results.map(
                 result => {
