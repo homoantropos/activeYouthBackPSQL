@@ -172,7 +172,7 @@ class Result_controller {
                 where: {id: req.body.id}
             })
             let completed = req.body.completed;
-            if(resultCandidate) {
+            if (resultCandidate) {
                 completed = resultCandidate.completed;
             }
             await Result.update(
@@ -205,6 +205,25 @@ class Result_controller {
     async getAllResults(req, res) {
         try {
             let results = await Result.scope('getFullResults').findAll();
+            if (req.query.direction) {
+                results = results.filter(result => result.appointment.direction === req.query.direction);
+            }
+            if (req.query.participants) {
+                results = results.filter(result => result.appointment.participants === req.query.participants);
+            }
+            if (req.query.gender) {
+                results = results.filter(result => result.appointment.gender === req.query.gender);
+            }
+            if (req.query.regionGroup) {
+                results = results.filter(result => result.appointment.regionGroup === req.query.regionGroup);
+            }
+            if (req.query.eduEntityType) {
+                results = results.filter(result => result.appointment.eduEntityType === req.query.eduEntityType);
+            }
+            const category = Number(req.query.category);
+            if (category !== 0) {
+                results = results.filter(result => result.appointment.category === req.query.category);
+            }
             results.map(
                 result => {
                     result.ratingPoints = ResultService.getPointsByPlace(result)
