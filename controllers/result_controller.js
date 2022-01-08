@@ -172,9 +172,6 @@ class Result_controller {
                 where: {id: req.body.id}
             })
             let completed = req.body.completed;
-            if (resultCandidate) {
-                completed = resultCandidate.completed;
-            }
             await Result.update(
                 {
                     appointmentId: appointment.id,
