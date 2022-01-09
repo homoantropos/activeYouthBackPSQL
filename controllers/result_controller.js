@@ -167,10 +167,7 @@ class Result_controller {
             const user = await User.findOne({
                 where: {email: req.user.email},
                 attributes: ['id']
-            })
-            const resultCandidate = await Result.findOne({
-                where: {id: req.body.id}
-            })
+            });
             let completed = req.body.completed;
             await Result.update(
                 {
