@@ -211,6 +211,13 @@ class Result_controller {
             if (req.query.regionGroup) {
                 results = results.filter(result => result.region.regionGroup === req.query.regionGroup);
             }
+            if (req.query.years) {
+                const year = Number(req.query.years);
+                if (year !== 0) {
+                    results = results.filter(result => result.appointment.start.getFullYear() === year);
+                }
+                console.log(req.query.years)
+            }
             if (req.query.eduEntityType) {
                 results = results.filter(result => result.educationEntity.eduEntityType === req.query.eduEntityType);
             }
