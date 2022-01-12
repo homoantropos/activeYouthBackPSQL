@@ -11,68 +11,68 @@ const SportKind = require('./SportKind');
 const Report = sequelize.define(
     'report',
     {
-        countries_plan: {
+        countriesPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        regions_plan: {
+        regionsPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        educationEntity_plan: {
+        educationEntityPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        sportsmen_plan: {
+        sportsmenPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        coaches_plan: {
+        coachesPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        referees_plan: {
+        refereesPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        others_plan: {
+        othersPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        total_plan: {
+        totalPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        person_per_day_plan: {
+        personPerDayPlan: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
 
-        countries_fact: {
+        countriesFact: {
             type: Sequelize.INTEGER,
         },
-        regions_fact: {
+        regionsFact: {
             type: Sequelize.INTEGER,
         },
-        educationEntity_fact: {
+        educationEntityFact: {
             type: Sequelize.INTEGER,
         },
-        sportsmen_fact: {
+        sportsmenFact: {
             type: Sequelize.INTEGER,
         },
-        coaches_fact: {
+        coachesFact: {
             type: Sequelize.INTEGER,
         },
-        referees_fact: {
+        refereesFact: {
             type: Sequelize.INTEGER,
         },
-        others_fact: {
+        othersFact: {
             type: Sequelize.INTEGER,
         },
-        total_fact: {
+        totalFact: {
             type: Sequelize.INTEGER,
         },
-        person_per_day_fact: {
+        personPerDayFact: {
             type: Sequelize.INTEGER,
         },
     }, {
@@ -97,7 +97,7 @@ Report.addScope(
                 include: [
                     {
                         model: SportKind,
-                        attributes: {exclude: ['id', 'program', 'registration_number']}
+                        attributes: {exclude: ['id', 'program', 'registrationNumber']}
                     },
                     {
                         model: AppointmentPlace,
@@ -109,7 +109,7 @@ Report.addScope(
                             },
                             {
                                 model: Region,
-                                attributes: {exclude: ['id', 'region_group', 'countryId']}
+                                attributes: {exclude: ['id', 'regionGroup', 'countryId']}
                             },
                             {
                                 model: Town,

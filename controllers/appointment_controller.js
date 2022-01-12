@@ -9,6 +9,7 @@ class Appointment_controller {
 
     async createAppointment(req, res) {
         try {
+            console.log(req.body);
             const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
                 where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
@@ -40,21 +41,20 @@ class Appointment_controller {
                 userId: user.id
             });
 
-            const total_plan = reportService.total_counter(req);
-            const person_per_day_plan = total_plan * appointment.duration;
+            const totalPlan = reportService.total_counter(req);
+            const personPerDayPlan = totalPlan * appointment.duration;
 
             const report = await appointment.createReport({
-                countries_plan: req.body.members.countries,
-                regions_plan: req.body.members.regions,
-                educationEntity_plan: req.body.members.educationEntity,
-                sportsmen_plan: req.body.members.sportsmen,
-                coaches_plan: req.body.members.coaches,
-                referees_plan: req.body.members.referees,
-                others_plan: req.body.members.others,
-                total_plan,
-                person_per_day_plan
+                countriesPlan: req.body.members.countries,
+                regionsPlan: req.body.members.regions,
+                educationEntityPlan: req.body.members.educationEntity,
+                sportsmenPlan: req.body.members.sportsmen,
+                coachesPlan: req.body.members.coaches,
+                refereesPlan: req.body.members.referees,
+                othersPlan: req.body.members.others,
+                totalPlan,
+                personPerDayPlan
             });
-
             res.status(201).json({appointment, report});
         } catch (error) {
             res.status(500).json({

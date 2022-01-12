@@ -6,37 +6,34 @@ class Report_controller {
 
     async createReport(req, res, appointment) {
         try {
-            const total_plan = this.total_counter(req);
-            console.log('total', total_plan);
-            const person_per_day_plan = total_plan * appointment.rows[0].duration;
-            console.log('personPD', person_per_day_plan);
-            console.log('duration', appointment.rows[0].duration);
+            const totalPlan = this.totalCounter(req);
+            const personPerDayPlan = totalPlan * appointment.rows[0].duration;
             const report = await db.query(`
                 INSERT INTO report 
                 (
-                    countries_plan,
-                    regions_plan,
-                    educationEntity_plan,
-                    sportsmen_plan,
-                    coaches_plan,
-                    referees_plan,
-                    others_plan,
-                    total_plan,
-                    person_per_day_plan,
-                    appointment_id
+                    countriesPlan,
+                    regionsPlan,
+                    educationEntityPlan,
+                    sportsmenPlan,
+                    coachesPlan,
+                    refereesplan,
+                    othersplan,
+                    totalPlan,
+                    personPerDayPlan,
+                    appointmentId
                 )
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 RETURNING
-                    report_id,
-                    countries_plan,
-                    regions_plan,
-                    educationEntity_plan,
-                    sportsmen_plan,
-                    coaches_plan,
-                    referees_plan,
-                    others_plan,
-                    total_plan,
-                    person_per_day_plan,
+                    reportId,
+                    countriesPlan,
+                    regionsPlan,
+                    educationEntityPlan,
+                    sportsmenPlan,
+                    coachesPlan,
+                    refereesplan,
+                    othersplan,
+                    totalplan,
+                    personPerDayPlan,
                     appointmentId
             `,
                 [
@@ -47,12 +44,11 @@ class Report_controller {
                     req.body.members.coaches,
                     req.body.members.referees,
                     req.body.members.others,
-                    total_plan,
-                    person_per_day_plan,
+                    totalPlan,
+                    personPerDayPlan,
                     req.body.appointmentId
                 ]);
-            console.log('report', report.rows[0]);
-            //res.status(201).json(report.rows[0]);
+            res.status(201).json(report.rows[0]);
 
         } catch (error) {
             res.status(500).json({
@@ -64,29 +60,29 @@ class Report_controller {
     async updateReport(req, res) {
         try {
 
-            const total_plan = reportService.total_plan_counter(req);
-            const person_per_day_plan = total_plan*req.body.appointment.duration;
-            const total_fact = reportService.total_fact_counter(req);
-            const person_per_day_fact = total_fact*req.body.appointment.duration;
+            const totalPlan = reportService.totalPlanCounter(req);
+            const personPerDayPlan = totalPlan*req.body.appointment.duration;
+            const totalFact = reportService.totalFactCounter(req);
+            const personPerDayFact = totalFact*req.body.appointment.duration;
             const report = await Report.update({
-                countries_plan: req.body.countries_plan,
-                regions_plan: req.body.regions_plan,
-                educationEntity_plan: req.body.educationEntity_plan,
-                sportsmen_plan: req.body.sportsmen_plan,
-                coaches_plan: req.body.coaches_plan,
-                referees_plan: req.body.referees_plan,
-                others_plan: req.body.others_plan,
-                total_plan,
-                person_per_day_plan,
-                countries_fact: req.body.countries_fact,
-                regions_fact: req.body.regions_fact,
-                educationEntity_fact: req.body.educationEntity_fact,
-                sportsmen_fact: req.body.sportsmen_fact,
-                coaches_fact: req.body.coaches_fact,
-                referees_fact: req.body.referees_fact,
-                others_fact: req.body.others_fact,
-                total_fact,
-                person_per_day_fact
+                countriesPlan: req.body.countriesPlan,
+                regionsPlan: req.body.regionsPlan,
+                educationEntityPlan: req.body.educationEntityPlan,
+                sportsmenPlan: req.body.sportsmenPlan,
+                coachesPlan: req.body.coachesPlan,
+                refereesPlan: req.body.refereesPlan,
+                othersPlan: req.body.othersPlan,
+                totalPlan,
+                personPerDayPlan,
+                countriesFact: req.body.countriesFact,
+                regionsFact: req.body.regionsFact,
+                educationEntityFact: req.body.educationEntityFact,
+                sportsmenFact: req.body.sportsmenFact,
+                coachesFact: req.body.coachesFact,
+                refereesFact: req.body.refereesFact,
+                othersFact: req.body.othersFact,
+                totalFact: totalFact,
+                personPerDayFact: personPerDayFact
             }, {where: {id: req.body.id}});
             res.status(200).json(report);
         } catch (error) {
@@ -171,7 +167,7 @@ class Report_controller {
         }
     }
 
-    total_counter (req) {
+    totalCounter (req) {
         return (
             Number(req.body.members.countries) +
             Number(req.body.members.regions) +

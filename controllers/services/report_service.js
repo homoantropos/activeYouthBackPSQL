@@ -2,101 +2,102 @@ const db = require('../../database/db');
 
 class ReportService {
 
-    saveReportToDB(req, appointment) {
-        const total_plan = this.total_counter(req);
-        const person_per_day_plan = total_plan * appointment.rows[0].duration;
-        return (
-            db.query(`
-            INSERT INTO report 
-            (
-                countries_plan,
-                regions_plan,
-                educationEntity_plan,
-                sportsmen_plan,
-                coaches_plan,
-                referees_plan,
-                others_plan,
-                total_plan,
-                person_per_day_plan,
-                appointment_id
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-            RETURNING
-                report_id,
-                countries_plan,
-                regions_plan,
-                educationEntity_plan,
-                sportsmen_plan,
-                coaches_plan,
-                referees_plan,
-                others_plan,
-                total_plan,
-                person_per_day_plan,
-                appointment_id
-            `,
-                [
-                    req.body.members.countries,
-                    req.body.members.regions,
-                    req.body.members.educationEntity,
-                    req.body.members.sportsmen,
-                    req.body.members.coaches,
-                    req.body.members.referees,
-                    req.body.members.others,
-                    total_plan,
-                    person_per_day_plan,
-                    appointment.rows[0].appointment_id
-                ])
-        )
-    }
+    // saveReportToDB(req, appointment) {
+    //     const totalPlan = this.totalCounter(req);
+    //     const personPerDayPlan = totalPlan * appointment.rows[0].duration;
+    //     return (
+    //         db.query(
+    //             `
+    //         INSERT INTO report
+    //         (
+    //             countriesPlan,
+    //             regionsPlan,
+    //             educationEntityPlan,
+    //             sportsmenPlan,
+    //             coachesPlan,
+    //             referees_plan,
+    //             others_plan,
+    //             total_plan,
+    //             person_per_day_plan,
+    //             appointment_id
+    //         )
+    //         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    //         RETURNING
+    //             reportId,
+    //             countriesPlan,
+    //             regionsPlan,
+    //             educationEntityPlan,
+    //             sportsmenPlan,
+    //             coachesPlan,
+    //             refereesPlan,
+    //             othersPlan,
+    //             totalPlan,
+    //             personPerdayPlan,
+    //             appointment_id
+    //         `,
+    //             [
+    //                 req.body.members.countries,
+    //                 req.body.members.regions,
+    //                 req.body.members.educationEntity,
+    //                 req.body.members.sportsmen,
+    //                 req.body.members.coaches,
+    //                 req.body.members.referees,
+    //                 req.body.members.others,
+    //                 totalPlan,
+    //                 personPerDayPlan,
+    //                 appointment.rows[0].appointment_id
+    //             ])
+    //     )
+    // }
 
-    getReportsFromDB() {
-        return (
-            db.query(`
-            SELECT
-                report_id,
-                countries_plan,
-                regions_plan,
-                educationEntity_plan,
-                sportsmen_plan,
-                coaches_plan,
-                referees_plan,
-                others_plan,
-                total_plan,
-                person_per_day_plan,
-                countries_fact,
-                regions_fact,
-                educationEntity_fact,
-                sportsmen_fact,
-                coaches_fact,
-                referees_fact,
-                others_fact,
-                total_fact,
-                person_per_day_fact,
-                title,
-                startDate,
-                finishDate,
-                country.country_name,
-                region.region_name,
-                town.town_name,
-                sportHall_name,
-                address
-            FROM
-                report
-            INNER JOIN appointment
-                ON report.appointment_id = appointment.appointment_id
-            INNER JOIN country
-                ON appointment.country_id = country.country_id
-            INNER JOIN region
-                ON appointment.region_id = region.region_id
-            INNER JOIN town
-                ON appointment.town_id = town.town_id
-            INNER JOIN sportHall
-                ON appointment.sportHall_id = sportHall.sportHall_id
-            `)
-        )
-    }
+    // getReportsFromDB() {
+    //     return (
+    //         db.query(`
+    //         SELECT
+    //             report_id,
+    //             countriesPlan,
+    //             regionsPlan,
+    //             educationEntityPlan,
+    //             sportsmenPlan,
+    //             coachesPlan,
+    //             refereesPlan,
+    //             othersPlan,
+    //             totalPlan,
+    //             personPerDayPlan,
+    //             countriesFact,
+    //             regionsFact,
+    //             educationEntityFact,
+    //             sportsmenFact,
+    //             coachesFact,
+    //             refereesFact,
+    //             othersFact,
+    //             totalFact,
+    //             personPerDayFact,
+    //             title,
+    //             startDate,
+    //             finishDate,
+    //             country.countryName,
+    //             region.regionName,
+    //             town.townName,
+    //             sportHallName,
+    //             address
+    //         FROM
+    //             report
+    //         INNER JOIN appointment
+    //             ON report.appointment_id = appointment.appointment_id
+    //         INNER JOIN country
+    //             ON appointment.country_id = country.country_id
+    //         INNER JOIN region
+    //             ON appointment.region_id = region.region_id
+    //         INNER JOIN town
+    //             ON appointment.town_id = town.town_id
+    //         INNER JOIN sportHall
+    //             ON appointment.sportHall_id = sportHall.sportHall_id
+    //         `)
+    //     )
+    // }
 
-    total_counter(req) {
+    totalCounter(req) {
         return (
             Number(req.body.members.sportsmen) +
             Number(req.body.members.coaches) +
@@ -105,21 +106,21 @@ class ReportService {
         )
     }
 
-    total_plan_counter(req) {
+    totalPlanCounter(req) {
         return (
-            req.body.sportsmen_plan +
-            req.body.coaches_plan +
-            req.body.referees_plan +
-            req.body.others_plan
+            req.body.sportsmenPlan +
+            req.body.coachesPlan +
+            req.body.refereesPlan +
+            req.body.othersPlan
         )
     }
 
-    total_fact_counter(req) {
+    totalFactCounter(req) {
         return (
-            req.body.sportsmen_fact +
-            req.body.coaches_fact +
-            req.body.referees_fact +
-            req.body.others_fact
+            req.body.sportsmenFact +
+            req.body.coachesFact +
+            req.body.refereesFact +
+            req.body.othersFact
         )
     }
 }
