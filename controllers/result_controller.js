@@ -216,7 +216,6 @@ class Result_controller {
                 if (year !== 0) {
                     results = results.filter(result => result.appointment.start.getFullYear() === year);
                 }
-                console.log(req.query.years)
             }
             if (req.query.eduEntityType) {
                 results = results.filter(result => result.educationEntity.eduEntityType === req.query.eduEntityType);
