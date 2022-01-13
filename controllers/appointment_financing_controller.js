@@ -1,4 +1,4 @@
-const Appointment = require('../models/Appointment')
+const AppointmentFinancing = require('../models/AppointmentFinancing')
 
 
 class Appointment_financing_controller {
@@ -15,7 +15,10 @@ class Appointment_financing_controller {
 
     async getAllAppointmentsFinancing(req, res) {
         try {
-
+            const expenses = await AppointmentFinancing.scope('getFullAppointmentFinancing').findAll();
+            res.status(201).json({
+                expenses
+            })
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

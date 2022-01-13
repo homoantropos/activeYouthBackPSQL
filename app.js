@@ -9,7 +9,7 @@ const appointmentRoutes = require('./routes/appointment_routes');
 const coachRoutes = require('./routes/coach_routes');
 const countryRoutes = require('./routes/country_routes');
 const eduEntityRoutes = require('./routes/educational_entity_routes');
-const expensesRoutes = require('./routes/expenses_routes');
+const appointmentFinancingRoutes = require('./routes/appointment_financing_routes');
 const memberRoutes = require('./routes/members_routes');
 const newsRoutes = require('./routes/news_routes');
 const participantRoutes = require('./routes/participant_routes');
@@ -45,7 +45,7 @@ app.use('/api/activity', activityRoutes);
 app.use('/api/appointment', appointmentRoutes);
 app.use('/api/sportKind', sportKindsRoutes);
 app.use('/api/member', memberRoutes);
-app.use('/api/expenses', expensesRoutes);
+app.use('/api/expenses', appointmentFinancingRoutes);
 app.use('/api/report', reportRoutes);
 
 app.use('/api/result', resultRoutes);
