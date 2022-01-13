@@ -62,7 +62,6 @@ class Appointment_controller {
                 totalPlan,
                 personPerDayPlan
             });
-
             const expenses = await AppointmentFinancing.create({
                 appointmentId: appointment.id,
                 kekv2210plan: 0,
@@ -71,7 +70,7 @@ class Appointment_controller {
                 kekv2210fact: 0,
                 kekv2220fact: 0,
                 kekv2240fact: 0
-            })
+            });
             res.status(201).json({appointment, report, expenses});
         } catch (error) {
             res.status(500).json({
