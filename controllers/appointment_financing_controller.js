@@ -1,16 +1,7 @@
-const db = require('../database/db');
+const Appointment = require('../models/Appointment')
+
 
 class Appointment_financing_controller {
-
-    async createAppointmentFinancing(req, res) {
-        try {
-
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
 
     async updateAppointmentFinancing(req, res) {
         try {

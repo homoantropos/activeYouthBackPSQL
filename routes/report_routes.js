@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const controller = require('../controllers/report_controller');
 
-router.post('/', passport.authenticate('jwt', {session: false}), controller.createReport);
 router.patch('/', passport.authenticate('jwt', {session: false}), controller.updateReport);
 router.get('/', controller.getAllReports);
 router.get('/:id', controller.getOneReportById);

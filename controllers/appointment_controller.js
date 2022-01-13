@@ -3,13 +3,13 @@ const AppointmentPlace = require('../models/AppointmentPlace');
 const SportKind = require('../models/SportKind');
 const User = require('../models/User');
 const Report = require('../models/Report');
+const AppointmentFinancing = require('../models/AppointmentFinancing')
 const reportService = require('./services/report_service');
 
 class Appointment_controller {
 
     async createAppointment(req, res) {
         try {
-            console.log(req.body);
             const appointmentPlace = await AppointmentPlace.scope('appointmentPlace').findOne({
                 where: {appointmentPlaceName: req.body.place.appointmentPlaceName}
             });
@@ -41,7 +41,7 @@ class Appointment_controller {
                 userId: user.id
             });
 
-            const totalPlan = reportService.total_counter(req);
+            const totalPlan = reportService.totalCounter(req);
             const personPerDayPlan = totalPlan * appointment.duration;
 
             const report = await appointment.createReport({
@@ -52,10 +52,27 @@ class Appointment_controller {
                 coachesPlan: req.body.members.coaches,
                 refereesPlan: req.body.members.referees,
                 othersPlan: req.body.members.others,
+                countriesFact: 0,
+                regionsFact: 0,
+                educationEntityFact: 0,
+                sportsmenFact: 0,
+                coachesFact: 0,
+                refereesFact: 0,
+                othersFact: 0,
                 totalPlan,
                 personPerDayPlan
             });
-            res.status(201).json({appointment, report});
+
+            const expenses = await AppointmentFinancing.create({
+                appointmentId: appointment.id,
+                kekv2210plan: 0,
+                kekv2220plan: 0,
+                kekv2240plan: 0,
+                kekv2210fact: 0,
+                kekv2220fact: 0,
+                kekv2240fact: 0
+            })
+            res.status(201).json({appointment, report, expenses});
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error

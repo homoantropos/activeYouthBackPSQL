@@ -1,34 +1,34 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-const Appointment = require('../models/Appointment');
+const Appointment = require('./Appointment');
 const SportKind = require("./SportKind");
 
 const AppointmentFinancing = sequelize.define(
     'appointmentFinancing',
     {
         kekv2210plan: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: false
         },
         kekv2220plan: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: false
         },
         kekv2240plan: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: false
         },
         kekv2210fact: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: true
         },
         kekv2220fact: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: true
         },
         kekv2240fact: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: true
         }
     },
@@ -43,7 +43,7 @@ AppointmentFinancing.belongsTo(Appointment,
         onUpdate: 'CASCADE'
     });
 
-Appointment.hasOne(AppointmentFinancing);
+Appointment.hasMany(AppointmentFinancing);
 
 AppointmentFinancing.addScope(
     'getFullAppointmentFinancing', {

@@ -10,33 +10,33 @@ class Appointment_service {
                 startDate,
                 finishDate,
                 duration,
-                country_name,
-                region_name,
-                town_name,
-                sportHall_name,
+                countryName,
+                regionName,
+                townName,
+                sportHallName,
                 organizationsParticipants,
-                sport_kind,
+                sportKind,
                 kpkv,
                 haracter,
                 participants,
                 direction,
                 status,
                 organiser,
-                appointment_id,
+                appointmentId,
                 address,
-                person_id
+                personId
             FROM
                 appointment
             INNER JOIN country
-            ON appointment.country_id = country.country_id
+            ON appointment.countryId = country.countryId
             INNER JOIN region
-            ON appointment.region_id = region.region_id
+            ON appointment.regionId = region.regionId
             INNER JOIN town
-            ON appointment.town_id = town.town_id
+            ON appointment.townId = town.townId
             INNER JOIN sportHall
-            ON appointment.sportHall_id = sportHall.sporthall_id
-            INNER JOIN sport_kind
-            ON appointment.sportkind_id = sport_kind.id
+            ON appointment.sportHallId = sportHall.sporthallId
+            INNER JOIN sportKind
+            ON appointment.sportkindId = sportKind.id
             ORDER BY startDate
             `)
     )

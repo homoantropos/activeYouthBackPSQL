@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router()
 const controller = require('../controllers/appointment_financing_controller');
 
-router.post('/', controller.createAppointmentFinancing);
 router.patch('/', controller.updateAppointmentFinancing);
 router.get('/', controller.getAllAppointmentsFinancing);
 router.get('/:id', controller.getOneAppointmentFinancingById);

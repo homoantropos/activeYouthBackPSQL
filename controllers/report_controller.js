@@ -1,65 +1,10 @@
-const db = require('../database/db');
 const reportService = require('./services/report_service');
 const Report = require('../models/Report');
 
 class Report_controller {
 
-    async createReport(req, res, appointment) {
-        try {
-            const totalPlan = this.totalCounter(req);
-            const personPerDayPlan = totalPlan * appointment.rows[0].duration;
-            const report = await db.query(`
-                INSERT INTO report 
-                (
-                    countriesPlan,
-                    regionsPlan,
-                    educationEntityPlan,
-                    sportsmenPlan,
-                    coachesPlan,
-                    refereesplan,
-                    othersplan,
-                    totalPlan,
-                    personPerDayPlan,
-                    appointmentId
-                )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-                RETURNING
-                    reportId,
-                    countriesPlan,
-                    regionsPlan,
-                    educationEntityPlan,
-                    sportsmenPlan,
-                    coachesPlan,
-                    refereesplan,
-                    othersplan,
-                    totalplan,
-                    personPerDayPlan,
-                    appointmentId
-            `,
-                [
-                    req.body.members.contries,
-                    req.body.members.regions,
-                    req.body.members.educationEntity,
-                    req.body.members.sportsmen,
-                    req.body.members.coaches,
-                    req.body.members.referees,
-                    req.body.members.others,
-                    totalPlan,
-                    personPerDayPlan,
-                    req.body.appointmentId
-                ]);
-            res.status(201).json(report.rows[0]);
-
-        } catch (error) {
-            res.status(500).json({
-                message: error.message ? error.message : error
-            })
-        }
-    }
-
     async updateReport(req, res) {
         try {
-
             const totalPlan = reportService.totalPlanCounter(req);
             const personPerDayPlan = totalPlan*req.body.appointment.duration;
             const totalFact = reportService.totalFactCounter(req);
@@ -167,17 +112,6 @@ class Report_controller {
         }
     }
 
-    totalCounter (req) {
-        return (
-            Number(req.body.members.countries) +
-            Number(req.body.members.regions) +
-            Number(req.body.members.educationEntity) +
-            Number(req.body.members.sportsmen) +
-            Number(req.body.members.coaches) +
-            Number(req.body.members.referees) +
-            Number(req.body.members.others)
-        )
-    }
 }
 
 module.exports = new Report_controller()
