@@ -201,6 +201,7 @@ class Result_controller {
             let results = await Result.scope('getFullResults').findAll();
             if (req.query.direction) {
                 results = results.filter(result => result.appointment.direction === req.query.direction);
+
             }
             if (req.query.participants) {
                 results = results.filter(result => result.appointment.participants === req.query.participants);

@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/sequelize');
-
 const Appointment = require('./Appointment');
 const SportKind = require("./SportKind");
 
@@ -49,7 +48,7 @@ AppointmentFinancing.addScope(
     'getFullAppointmentFinancing', {
         include: [
             {
-                model: Appointment,
+                model: Appointment.scope('fullAppointment'),
                 attributes: {
                     exclude: [
                         'id', 'logoSrc', 'organizationsParticipants', 'kpkv',
