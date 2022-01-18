@@ -18,6 +18,10 @@ const AppointmentFinancing = sequelize.define(
             type: Sequelize.INTEGER,
             allowNull: false
         },
+        totalplan: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
         kekv2210fact: {
             type: Sequelize.INTEGER,
             allowNull: true
@@ -27,6 +31,10 @@ const AppointmentFinancing = sequelize.define(
             allowNull: true
         },
         kekv2240fact: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
+        totalfact: {
             type: Sequelize.INTEGER,
             allowNull: true
         }

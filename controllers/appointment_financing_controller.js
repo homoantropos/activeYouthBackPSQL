@@ -33,8 +33,8 @@ class Appointment_financing_controller {
             }
             expenses.map(
                 exp => {
-                    exp.totalPlan = exp.kekv2210plan + exp.kekv2220plan + exp.kekv2240plan;
-                    exp.totalFact = exp.kekv2210fact + exp.kekv2220fact + exp.kekv2240fact;
+                    exp.totalplan = exp.kekv2210plan + exp.kekv2220plan + exp.kekv2240plan;
+                    exp.totalfact = exp.kekv2210fact + exp.kekv2220fact + exp.kekv2240fact;
                 }
             );
             res.status(201).json(expenses);
