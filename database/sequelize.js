@@ -12,4 +12,4 @@ const sequelize = new Sequelize(keys.dbName, keys.dbUser, keys.dbPwd, {
     logging: false
 })
 
-module.exports= sequelize
+module.exports = sequelize
