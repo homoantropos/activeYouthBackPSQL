@@ -7,7 +7,7 @@ const User = require('../models/User');
 class User_controller {
 
     async registerUser(req, res) {
-        if (true) {
+        if (req.user.role === 'superAdmin') {
             try {
                 const salt = await bcrypt.genSalt(10);
                 let password = await bcrypt.hash(req.body.password, salt);
