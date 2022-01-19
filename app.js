@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const helmet = require('helmet');
+const compression = require('compression')
 
 const sequelize = require('./database/sequelize');
 const activityRoutes = require('./routes/activity_routes');
@@ -30,6 +31,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(require('cors')());
 app.use(helmet());
+app.use(compression());
 
 sequelize.sync({alter: true})
     .then(
