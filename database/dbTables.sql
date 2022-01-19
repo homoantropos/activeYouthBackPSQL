@@ -164,3 +164,11 @@ create TABLE report (
             ON DELETE CASCADE
             ON UPDATE NO ACTION
 );
+
+
+create TABLE role(
+    role VARCHAR(100) NOT NULL UNIQUE,
+    code VARCHAR(100) NOT NULL,
+    role_id INT GENERATED ALWAYS AS IDENTITY,
+    PRIMARY KEY (role_id)
+);
