@@ -10,9 +10,11 @@ const sequelize = new Sequelize(keys.dbName, keys.dbUser, keys.dbPwd, {
         timestamps: false
     },
     logging: false,
-    dialectOptions: {
-        require: true,
-        rejectUnauthorized: false
+    production: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
     }
 })
 
