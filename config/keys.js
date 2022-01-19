@@ -1,6 +1,8 @@
-if(process.env.NODE_ENV === 'production') {
-    module.exports = require('./keys.prod')
-} else {
-    module.exports = require('./keys.dev')
+module.exports = {
+    jwt: 'dev-token',
+    dbName: 'activeyouth',
+    dbUser: 'postgres',
+    dbPwd: '20200876',
+    dbHost: 'localhost',
+    dbPort: '5432'
 }
-
