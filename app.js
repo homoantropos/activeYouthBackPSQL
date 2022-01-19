@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const sequelize = require('./database/sequelize');
+const helmet = require('helmet');
 
+const sequelize = require('./database/sequelize');
 const activityRoutes = require('./routes/activity_routes');
 const appointmentRoutes = require('./routes/appointment_routes');
 const coachRoutes = require('./routes/coach_routes');
@@ -28,6 +29,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(require('cors')());
+app.use(helmet());
 
 sequelize.sync({alter: true})
     .then(
