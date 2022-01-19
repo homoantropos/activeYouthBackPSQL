@@ -5,7 +5,21 @@ class Appointment_financing_controller {
 
     async updateAppointmentFinancing(req, res) {
         try {
-
+            const expenses = await AppointmentFinancing.scope('getFullAppointmentFinancing').update({
+                    kekv2210plan: req.body.kekv2210plan,
+                    kekv2220plan: req.body.kekv2220plan,
+                    kekv2240plan: req.body.kekv2240plan,
+                    totalplan: req.body.totalplan,
+                    kekv2210fact: req.body.kekv2210fact,
+                    kekv2220fact: req.body.kekv2220fact,
+                    kekv2240fact: req.body.kekv2210plan,
+                    totalfact: req.body.totalfact
+                },
+                {where: {id: req.body.id}});
+            res.status(201).json({
+                expenses,
+                message: 'Зміни уcпішно збережено!'
+            })
         } catch (error) {
             res.status(500).json({
                 message: error.message ? error.message : error
