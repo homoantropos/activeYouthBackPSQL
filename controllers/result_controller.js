@@ -199,6 +199,7 @@ class Result_controller {
     async getAllResults(req, res) {
         try {
             let results = await Result.scope('getFullResults').findAll();
+            results = results.filter(result => result.completed === true);
             if (req.query.direction) {
                 results = results.filter(result => result.appointment.direction === req.query.direction);
 

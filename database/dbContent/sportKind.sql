@@ -1,5 +1,6 @@
-INSERT INTO sport_kind(sport_kind, program, registration_number)
-    VALUES
+INSERT INTO public."user"(
+	sportKind, program, registrationNumber)
+	VALUES
 ('Бадмінтон','I',001),
 ('Баскетбол','I',002),
 ('Бейсбол','I',003),
