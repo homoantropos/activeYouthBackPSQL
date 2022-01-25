@@ -125,7 +125,7 @@ class Appointment_controller {
             let appointments = await Appointment.scope('fullAppointment').findAll();
             console.log(req.query.month)
             if(req.query.month) {
-                appointments = appointments.filter(appointment => appointment.start.month === req.query.month)
+                appointments = appointments.filter(appointment => appointment.start.month !== req.query.month)
             }
             res.status(200).json(appointments);
         } catch (error) {
