@@ -122,11 +122,19 @@ class Appointment_controller {
 
     async getAllAppointments(req, res) {
         try {
-            let appointments = await Appointment.scope('fullAppointment').findAll();
+            let appointments = await Appointment.scope('fullAppointment').findAll(
+                {
+                    order: [
+                        ['start', 'ASC']
+                    ]
+                }
+            );
             if (req.query.date) {
                 let date = new Date(req.query.date);
                 date.setDate(date.getDate() + 30);
-                appointments = appointments.filter(appointment => appointment.start <= date)
+                appointments = appointments.filter(appointment => appointment.start > req.query.date);
+                appointments = appointments.filter(appointment => appointment.start <= date);
+                appointments = appointments.sort('start', DSC)
             }
             res.status(200).json(appointments);
         } catch (error) {
