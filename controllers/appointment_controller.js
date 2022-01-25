@@ -132,7 +132,7 @@ class Appointment_controller {
             if (req.query.date) {
                 let date = new Date(req.query.date);
                 date.setDate(date.getDate() + 30);
-                appointments = appointments.filter(appointment => appointment.start > req.query.date);
+                appointments = appointments.filter(appointment => appointment.start > new Date(req.query.date));
                 appointments = appointments.filter(appointment => appointment.start <= date);
             }
             res.status(200).json(appointments);
