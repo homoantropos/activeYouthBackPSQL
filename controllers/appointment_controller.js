@@ -134,7 +134,6 @@ class Appointment_controller {
                 date.setDate(date.getDate() + 30);
                 appointments = appointments.filter(appointment => appointment.start > req.query.date);
                 appointments = appointments.filter(appointment => appointment.start <= date);
-                appointments = appointments.sort('start', DSC)
             }
             res.status(200).json(appointments);
         } catch (error) {
